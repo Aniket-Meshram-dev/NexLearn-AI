@@ -7,7 +7,16 @@ import {
   LineElement, BarElement, Title, Tooltip, Legend, Filler
 } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
-import { Router } from 'next/router';
+import {
+  BarChart3,
+  Mail,
+  Printer,
+  Download,
+  Target,
+  CheckSquare,
+  Clock,
+  TrendingUp,
+} from 'lucide-react';
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler);
@@ -252,37 +261,62 @@ export default function ReportsPage() {
       </div>
 
       <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-        <div>
-          <h1>📈 Reports & Analytics</h1>
-          <p>Track your long-term learning performance</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '10px',
+              background: 'rgba(99, 102, 241, 0.12)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--primary)',
+            }}
+          >
+            <BarChart3 size={22} />
+          </div>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 800 }}>Reports & Analytics</h1>
+            <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+              Track comprehensive performance, quiz metrics, and learning velocity
+            </p>
+          </div>
         </div>
         <div style={{ display: 'flex', gap: '12px' }} className="no-print">
           <button
             className="btn"
             onClick={handleEmailReport}
             disabled={isEmailing}
-            style={{ background: 'var(--primary-bg)', color: 'var(--primary)', fontWeight: 600, border: 'none', minWidth: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            style={{ background: 'var(--primary-bg)', color: 'var(--primary)', fontWeight: 600, border: 'none', minWidth: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', borderRadius: '10px' }}
           >
-            {isEmailing ? <><span className="spinner spinner-sm" style={{ width: '14px', height: '14px' }} /> Preparing PDF...</> : '✉️ Email Report'}
+            {isEmailing ? <><span className="spinner spinner-sm" style={{ width: '14px', height: '14px' }} /> Preparing PDF...</> : <><Mail size={16} /><span>Email Report</span></>}
           </button>
           <button
             className="btn btn-secondary"
             onClick={handleNativePrint}
             disabled={isPrinting || isExporting}
+            style={{ borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}
           >
-            {isPrinting ? 'Preparing Layout...' : '🖨️ Print Record'}
+            <Printer size={16} />
+            <span>{isPrinting ? 'Preparing...' : 'Print Record'}</span>
           </button>
           <button
             className="btn btn-primary"
             onClick={() => downloadReport()}
             disabled={isExporting || isPrinting}
-            style={{ minWidth: '180px' }}
+            style={{ minWidth: '180px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}
           >
             {isExporting ? (
               <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span className="spinner-sm" /> Capturing Sections...
               </span>
-            ) : '📄 Download Official PDF'}
+            ) : (
+              <>
+                <Download size={16} />
+                <span>Download Official PDF</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -290,15 +324,27 @@ export default function ReportsPage() {
       <div id="report-dashboard" style={{ background: 'var(--bg)', borderRadius: '24px' }}>
         <div className="grid-3" style={{ marginBottom: 24 }}>
           <div className="stat-card">
-            <div className="stat-icon blue">🎯</div>
-            <div className="stat-info"><h3>{data.accuracy}%</h3><p>Overall Accuracy</p></div>
+            <div className="stat-icon blue">
+              <Target size={22} />
+            </div>
+            <div className="stat-info">
+              <h3>{data.accuracy}%</h3>
+              <p>Overall Accuracy</p>
+            </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon green">📝</div>
-            <div className="stat-info"><h3>{data.totalQuizzes}</h3><p>Quizzes Passed</p></div>
+            <div className="stat-icon green">
+              <CheckSquare size={22} />
+            </div>
+            <div className="stat-info">
+              <h3>{data.totalQuizzes}</h3>
+              <p>Quizzes Passed</p>
+            </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon yellow">⏱️</div>
+            <div className="stat-icon yellow">
+              <Clock size={22} />
+            </div>
             <div className="stat-info">
               <h3>{Math.round(data.weeklyStudyTime.reduce((acc, curr) => acc + curr.minutes, 0) / 60 * 10) / 10}h</h3>
               <p>Study Time (Last 4 Weeks)</p>

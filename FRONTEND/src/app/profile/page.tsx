@@ -4,6 +4,20 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Country, State, City } from 'country-state-city';
+import {
+  Zap,
+  Sparkles,
+  User,
+  MapPin,
+  Calendar,
+  Target,
+  GraduationCap,
+  Bot,
+  BookOpen,
+  Award,
+  Trophy,
+  ArrowRight,
+} from 'lucide-react';
 
 export default function ProfilePage() {
   const { data: session, status, update } = useSession();
@@ -393,16 +407,16 @@ export default function ProfilePage() {
 
                     {/* Info Chips Row */}
                     <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                      <span style={{ background: '#f8fafc', color: '#334155', padding: '5px 14px', borderRadius: 30, fontWeight: 700, fontSize: '0.82rem', border: '1px solid #e2e8f0' }}>
-                        ⚡ Lvl {Math.floor(points / 500) + 1} NexLearn Scholar
+                      <span style={{ background: 'var(--secondary)', color: 'var(--text)', padding: '5px 14px', borderRadius: 30, fontWeight: 700, fontSize: '0.82rem', border: '1px solid var(--border)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <Zap size={14} style={{ color: '#F59E0B' }} /> Lvl {Math.floor(points / 500) + 1} NexLearn Scholar
                       </span>
-                      <span style={{ background: '#f0fdf4', color: '#10b981', padding: '5px 14px', borderRadius: 30, fontWeight: 700, fontSize: '0.82rem', border: '1px solid #bbf7d0' }}>
-                        🧪 {points} Knowledge XP
+                      <span style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10B981', padding: '5px 14px', borderRadius: 30, fontWeight: 700, fontSize: '0.82rem', border: '1px solid rgba(16, 185, 129, 0.25)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <Sparkles size={14} /> {points} Knowledge XP
                       </span>
 
                       {data.user.gender && (
-                        <span style={{ background: '#fdf4ff', color: '#a855f7', padding: '5px 14px', borderRadius: 30, fontWeight: 700, fontSize: '0.82rem', border: '1px solid #e9d5ff' }}>
-                          👤 {data.user.gender}
+                        <span style={{ background: 'rgba(168, 85, 247, 0.1)', color: '#A855F7', padding: '5px 14px', borderRadius: 30, fontWeight: 700, fontSize: '0.82rem', border: '1px solid rgba(168, 85, 247, 0.25)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                          <User size={14} /> {data.user.gender}
                         </span>
                       )}
                     </div>
@@ -412,30 +426,42 @@ export default function ProfilePage() {
                       <div style={{ marginTop: 20, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px 24px' }}>
                         {(data.user.city || data.user.state || data.user.country) && (
                           <div>
-                            <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>📍 Location</div>
-                            <div style={{ fontSize: '0.9rem', color: '#334155', fontWeight: 600 }}>
+                            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <MapPin size={12} />
+                              <span>Location</span>
+                            </div>
+                            <div style={{ fontSize: '0.9rem', color: 'var(--text)', fontWeight: 600 }}>
                               {[data.user.city, data.user.state, data.user.country].filter(Boolean).join(', ')}
                             </div>
                           </div>
                         )}
                         {data.user.dob && (
                           <div>
-                            <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>🎂 Date of Birth</div>
-                            <div style={{ fontSize: '0.9rem', color: '#334155', fontWeight: 600 }}>
+                            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <Calendar size={12} />
+                              <span>Date of Birth</span>
+                            </div>
+                            <div style={{ fontSize: '0.9rem', color: 'var(--text)', fontWeight: 600 }}>
                               {new Date(data.user.dob).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                             </div>
                           </div>
                         )}
                         {data.user.learningGoal && (
                           <div>
-                            <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>🎯 Specialization</div>
-                            <div style={{ fontSize: '0.9rem', color: '#334155', fontWeight: 600 }}>{data.user.learningGoal}</div>
+                            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <Target size={12} />
+                              <span>Specialization</span>
+                            </div>
+                            <div style={{ fontSize: '0.9rem', color: 'var(--text)', fontWeight: 600 }}>{data.user.learningGoal}</div>
                           </div>
                         )}
                         {data.user.educationLevel && (
                           <div>
-                            <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>🏫 Education</div>
-                            <div style={{ fontSize: '0.9rem', color: '#334155', fontWeight: 600 }}>{data.user.educationLevel}</div>
+                            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <GraduationCap size={12} />
+                              <span>Education</span>
+                            </div>
+                            <div style={{ fontSize: '0.9rem', color: 'var(--text)', fontWeight: 600 }}>{data.user.educationLevel}</div>
                           </div>
                         )}
                       </div>
@@ -447,7 +473,10 @@ export default function ProfilePage() {
 
             <div style={{ marginTop: 40, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'stretch' }}>
               <div style={{ background: 'var(--primary-bg)', padding: 24, borderRadius: 24, border: '1px solid var(--primary-light)', display: 'flex', flexDirection: 'column' }}>
-                <h4 style={{ margin: '0 0 12px 0', fontSize: '0.9rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>🤖 AI Career Insight</h4>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '0.9rem', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Bot size={18} />
+                  <span>AI Career Insight</span>
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text)', lineHeight: 1.6, fontWeight: 500, flex: 1 }}>
                   {data.courseCount === 0 ? (
                     `Welcome to NexLearn! Start your first course to receive personalized AI career insights based on your learning patterns.`
@@ -462,7 +491,7 @@ export default function ProfilePage() {
                   <span style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--primary)' }}>{Math.floor((points % 500) / 5)}% TO LVL {Math.floor(points / 500) + 2}</span>
                 </div>
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <div style={{ height: 16, background: 'white', borderRadius: 20, padding: 3, border: '1px solid var(--border)', width: '100%' }}>
+                  <div style={{ height: 16, background: 'var(--bg-white)', borderRadius: 20, padding: 3, border: '1px solid var(--border)', width: '100%' }}>
                     <div style={{ width: `${Math.min(100, (points % 500) / 5)}%`, height: '100%', background: 'linear-gradient(90deg, var(--primary), #6366f1)', borderRadius: 20 }} />
                   </div>
                   <p style={{ marginTop: 12, margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>You are currently outperforming <strong>{percentile}%</strong> of peers in this specialization path.</p>
@@ -477,7 +506,9 @@ export default function ProfilePage() {
             onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
             onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: 8 }}>📚</div>
+            <div style={{ display: 'inline-flex', padding: 12, borderRadius: 14, background: 'var(--primary-bg)', color: 'var(--primary)', marginBottom: 8 }}>
+              <BookOpen size={28} />
+            </div>
             <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text)' }}>{data.courseCount}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>Courses Enrolled</div>
           </div>
@@ -485,16 +516,20 @@ export default function ProfilePage() {
             onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
             onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: 8 }}>🎓</div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--success)' }}>{data.completedCourses}</div>
+            <div style={{ display: 'inline-flex', padding: 12, borderRadius: 14, background: 'rgba(16, 185, 129, 0.12)', color: '#10B981', marginBottom: 8 }}>
+              <GraduationCap size={28} />
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10B981' }}>{data.completedCourses}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>Mastery Achieved</div>
           </div>
           <div className="card" style={{ textAlign: 'center', padding: '24px 16px', border: '1px solid var(--border)', borderRadius: 20, transition: 'all 0.3s ease', cursor: 'default' }}
             onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
             onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: 8 }}>💎</div>
-            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)' }}>{points}</div>
+            <div style={{ display: 'inline-flex', padding: 12, borderRadius: 14, background: 'rgba(168, 85, 247, 0.12)', color: '#A855F7', marginBottom: 8 }}>
+              <Award size={28} />
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text)' }}>{points}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>Knowledge XP</div>
           </div>
         </div>
@@ -504,8 +539,14 @@ export default function ProfilePage() {
           {/* Achievements Column */}
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800 }}>🏆 Milestones</h3>
-              <Link href="/achievements" style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 700, textDecoration: 'none' }}>All Badges</Link>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Trophy size={20} style={{ color: '#F59E0B' }} />
+                <h3 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 800 }}>Mastery Milestones</h3>
+              </div>
+              <Link href="/achievements" style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 700, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <span>All Badges</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
             {data.unlockedAchievements && data.unlockedAchievements.length > 0 ? (

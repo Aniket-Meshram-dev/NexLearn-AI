@@ -2,6 +2,7 @@ import './globals.css';
 import SessionProvider from '@/components/SessionProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import AppLayout from '@/components/AppLayout';
+import SmoothScroll from '@/components/SmoothScroll';
 
 export const metadata = {
   title: 'NexLearn — AI-Powered Intelligent Learning Ecosystem',
@@ -19,12 +20,15 @@ export default function RootLayout({ children }) {
       <body>
         <SessionProvider>
           <ThemeProvider>
-            <AppLayout>
-              {children}
-            </AppLayout>
+            <SmoothScroll>
+              <AppLayout>
+                {children}
+              </AppLayout>
+            </SmoothScroll>
           </ThemeProvider>
         </SessionProvider>
       </body>
     </html>
   );
 }
+

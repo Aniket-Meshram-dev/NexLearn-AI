@@ -2,6 +2,22 @@
 import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useTheme } from '@/components/ThemeProvider';
+import {
+  User,
+  Sparkles,
+  Bell,
+  Shield,
+  AlertTriangle,
+  LogOut,
+  Mail,
+  Edit3,
+  Trash2,
+  CheckCircle2,
+  AlertCircle,
+  Info,
+  Lock,
+  Key,
+} from 'lucide-react';
 
 export default function SettingsPage() {
   const { data: session } = useSession();
@@ -351,24 +367,33 @@ export default function SettingsPage() {
         {/* Navigation Sidebar */}
         <div className="settings-sidebar">
           {[
-            { id: 'account', label: 'User Account', icon: '👤' },
-            { id: 'preferences', label: 'UI Preferences', icon: '✨' },
-            { id: 'notifications', label: 'Communications', icon: '🔔' },
-            { id: 'security', label: 'Security & Access', icon: '🛡️' },
-            { id: 'danger', label: 'Danger Zone', icon: '⚠️' }
-          ].map(tab => (
-            <div
-              key={tab.id}
-              className={`settings-nav-item ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              <span style={{ fontSize: '1.2rem' }}>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </div>
-          ))}
+            { id: 'account', label: 'User Account', icon: User },
+            { id: 'preferences', label: 'UI Preferences', icon: Sparkles },
+            { id: 'notifications', label: 'Communications', icon: Bell },
+            { id: 'security', label: 'Security & Access', icon: Shield },
+            { id: 'danger', label: 'Danger Zone', icon: AlertTriangle }
+          ].map(tab => {
+            const Icon = tab.icon;
+            return (
+              <div
+                key={tab.id}
+                className={`settings-nav-item ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+              >
+                <Icon size={18} />
+                <span>{tab.label}</span>
+              </div>
+            );
+          })}
           <div style={{ marginTop: 'auto', padding: 12 }}>
-            <button className="btn btn-ghost" onClick={() => signOut({ callbackUrl: '/' })} style={{ color: 'var(--danger)', width: '100%', justifyContent: 'flex-start' }}>
-              🚪 Log Out
+            <button
+              className="btn btn-ghost"
+              onClick={() => signOut({ callbackUrl: '/' })}
+              style={{ color: 'var(--danger)', width: '100%', justifyContent: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px' }}
+            >
+              <LogOut size={16} />
+              <span>Log Out</span>
             </button>
           </div>
         </div>
@@ -418,11 +443,12 @@ export default function SettingsPage() {
                       </div>
                       <button
                         className="btn btn-outline"
-                        style={{ borderRadius: 12, padding: '8px 20px', flexShrink: 0, marginLeft: 16, opacity: hasPassword ? 1 : 0.4 }}
+                        style={{ borderRadius: 12, padding: '8px 20px', flexShrink: 0, marginLeft: 16, opacity: hasPassword ? 1 : 0.4, display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                         disabled={!hasPassword}
                         onClick={() => { setShowEmailChangeModal(true); setEmailChangeStep('input'); setEmailChangeError(''); setNewEmailValue(''); setEmailChangeOtp(''); }}
                       >
-                        ✏️ Change Email
+                        <Edit3 size={14} />
+                        <span>Change Email</span>
                       </button>
                     </div>
                   </div>
@@ -585,8 +611,9 @@ export default function SettingsPage() {
                   <p style={{ color: 'var(--danger)', fontSize: '0.9rem', marginBottom: 24, opacity: 0.9 }}>
                     Warning: This action is irreversible. All datasets, academic history, and telemetry associated with your account will be permanently expunged.
                   </p>
-                  <button className="btn btn-danger" style={{ width: '100%', borderRadius: 12, boxShadow: '0 4px 12px rgba(239,68,68,0.2)' }} onClick={() => setShowDeleteModal(true)} disabled={deleteLoading || loading}>
-                    🗑️ Confirm Permanent Account Erasure
+                  <button className="btn btn-danger" style={{ width: '100%', borderRadius: 12, boxShadow: '0 4px 12px rgba(239,68,68,0.2)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} onClick={() => setShowDeleteModal(true)} disabled={deleteLoading || loading}>
+                    <Trash2 size={16} />
+                    <span>Confirm Permanent Account Erasure</span>
                   </button>
                 </div>
               )}
@@ -601,8 +628,14 @@ export default function SettingsPage() {
       <div className="toast-container">
         {toast.visible && (
           <div className={`toast toast-${toast.type}`}>
-            <span style={{ fontSize: '1.2rem' }}>
-              {toast.type === 'success' ? '✅' : toast.type === 'error' ? '❌' : 'ℹ️'}
+            <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+              {toast.type === 'success' ? (
+                <CheckCircle2 size={18} style={{ color: '#10B981' }} />
+              ) : toast.type === 'error' ? (
+                <AlertCircle size={18} style={{ color: '#EF4444' }} />
+              ) : (
+                <Info size={18} style={{ color: 'var(--primary)' }} />
+              )}
             </span>
             <span style={{ fontWeight: 600 }}>{toast.message}</span>
           </div>
@@ -806,7 +839,21 @@ export default function SettingsPage() {
         <div className="modal-overlay">
           <div className="modal-window">
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: 8 }}>✉️</div>
+              <div
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '16px',
+                  background: 'var(--primary-bg)',
+                  color: 'var(--primary)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 12,
+                }}
+              >
+                <Mail size={28} />
+              </div>
               <h3 style={{ fontSize: '1.4rem', fontWeight: 900, margin: 0 }}>
                 {emailChangeStep === 'input' ? 'Change Email Address' : 'Verify Authorization Code'}
               </h3>
