@@ -55,17 +55,18 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-          <NexLearnLogo size="lg" clickable={true} />
+      <div className="auth-card auth-card-wide">
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+          <NexLearnLogo size="md" clickable={true} />
         </div>
         <h1>Create Account</h1>
         <p className="auth-subtitle">Start your intelligent learning journey</p>
 
         <button 
+          type="button"
           onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-          className="btn btn-google btn-lg" 
-          style={{ width: '100%', marginBottom: 16 }}
+          className="btn btn-google" 
+          style={{ width: '100%', marginBottom: 12 }}
         >
           <svg width="18" height="18" viewBox="0 0 18 18">
             <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
@@ -78,23 +79,72 @@ export default function RegisterPage() {
 
         <div className="auth-divider">OR</div>
 
-        {error && <div className="alert alert-danger">⚠️ {error}</div>}
+        {error && (
+          <div className="alert alert-danger" style={{ padding: '8px 12px', fontSize: '0.82rem', marginBottom: 12 }}>
+            ⚠️ {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label">Full Name</label>
-            <input type="text" className="form-input" placeholder="John Doe" required
-              value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          <div className="auth-grid-2col">
+            <div className="form-group">
+              <label className="form-label">Full Name</label>
+              <input 
+                type="text" 
+                className="form-input" 
+                placeholder="John Doe" 
+                required
+                value={form.name} 
+                onChange={(e) => setForm({ ...form, name: e.target.value })} 
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Email</label>
+              <input 
+                type="email" 
+                className="form-input" 
+                placeholder="you@example.com" 
+                required
+                value={form.email} 
+                onChange={(e) => setForm({ ...form, email: e.target.value })} 
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label className="form-label">Email</label>
-            <input type="email" className="form-input" placeholder="you@example.com" required
-              value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+
+          <div className="auth-grid-2col">
+            <div className="form-group">
+              <label className="form-label">Password</label>
+              <input 
+                type="password" 
+                className="form-input" 
+                placeholder="Min. 6 chars" 
+                required
+                value={form.password} 
+                onChange={(e) => setForm({ ...form, password: e.target.value })} 
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Confirm Password</label>
+              <input 
+                type="password" 
+                className="form-input" 
+                placeholder="Repeat password" 
+                required
+                value={form.confirmPassword} 
+                onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} 
+              />
+            </div>
           </div>
+
           <div className="form-group">
-            <label className="form-label">Learning Goal</label>
-            <select className="form-select" value={form.learningGoal}
-              onChange={(e) => setForm({ ...form, learningGoal: e.target.value })}>
+            <label className="form-label">
+              Learning Goal <span style={{ color: 'var(--text-muted)', fontWeight: 400, fontSize: '0.75rem' }}>(optional)</span>
+            </label>
+            <select 
+              className="form-select" 
+              value={form.learningGoal}
+              onChange={(e) => setForm({ ...form, learningGoal: e.target.value })}
+            >
               <option value="">Select a goal (optional)</option>
               <option value="Interview Preparation">Interview Preparation</option>
               <option value="Project Building">Project Building</option>
@@ -103,18 +153,13 @@ export default function RegisterPage() {
               <option value="Career Change">Career Change</option>
             </select>
           </div>
-          <div className="form-group">
-            <label className="form-label">Password</label>
-            <input type="password" className="form-input" placeholder="Min. 6 characters" required
-              value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Confirm Password</label>
-            <input type="password" className="form-input" placeholder="Re-enter password" required
-              value={form.confirmPassword} onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} />
-          </div>
-          <button type="submit" className="btn btn-primary btn-lg" disabled={loading}
-            style={{ width: '100%' }}>
+
+          <button 
+            type="submit" 
+            className="btn btn-primary" 
+            disabled={loading}
+            style={{ width: '100%', padding: '11px', marginTop: 4, borderRadius: 10, fontWeight: 700 }}
+          >
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>

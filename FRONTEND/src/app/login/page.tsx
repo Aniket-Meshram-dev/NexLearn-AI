@@ -55,16 +55,17 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-          <NexLearnLogo size="lg" clickable={true} />
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+          <NexLearnLogo size="md" clickable={true} />
         </div>
         <h1>Welcome Back</h1>
         <p className="auth-subtitle">Sign in to continue your learning journey</p>
 
         <button 
+          type="button"
           onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-          className="btn btn-google btn-lg" 
-          style={{ width: '100%', marginBottom: 16 }}
+          className="btn btn-google" 
+          style={{ width: '100%', marginBottom: 12 }}
         >
           <svg width="18" height="18" viewBox="0 0 18 18">
             <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
@@ -77,7 +78,11 @@ export default function LoginPage() {
 
         <div className="auth-divider">OR</div>
 
-        {error && <div className="alert alert-danger">⚠️ {error}</div>}
+        {error && (
+          <div className="alert alert-danger" style={{ padding: '8px 12px', fontSize: '0.82rem', marginBottom: 12 }}>
+            ⚠️ {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -90,9 +95,9 @@ export default function LoginPage() {
             />
           </div>
           <div className="form-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
               <label className="form-label" style={{ margin: 0 }}>Password</label>
-              <Link href="/forgot-password" style={{ fontSize: '0.82rem', color: 'var(--primary)', fontWeight: 600 }}>
+              <Link href="/forgot-password" style={{ fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 600 }}>
                 Forgot password?
               </Link>
             </div>
@@ -122,8 +127,12 @@ export default function LoginPage() {
             </div>
           )}
 
-          <button type="submit" className="btn btn-primary btn-lg" disabled={loading}
-            style={{ width: '100%' }}>
+          <button 
+            type="submit" 
+            className="btn btn-primary" 
+            disabled={loading}
+            style={{ width: '100%', padding: '11px', marginTop: 4, borderRadius: 10, fontWeight: 700 }}
+          >
             {loading ? 'Processing...' : requireOTP ? 'Verify & Sign In' : 'Sign In'}
           </button>
         </form>
