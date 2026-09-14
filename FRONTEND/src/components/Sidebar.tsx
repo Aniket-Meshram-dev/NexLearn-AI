@@ -1,6 +1,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import NexLearnLogo from './NexLearnLogo';
 
 const navSections = [
   {
@@ -40,12 +41,8 @@ export default function Sidebar({ isOpen, onClose }) {
         display: 'none',
       }} />}
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <div className="sidebar-logo">
-          <div className="logo-icon">🎓</div>
-          <div>
-            <h2>NexLearn</h2>
-            <span>AI Learning Platform</span>
-          </div>
+        <div className="sidebar-logo" style={{ padding: '20px 24px' }}>
+          <NexLearnLogo size="md" clickable={true} />
         </div>
 
         <nav className="sidebar-nav">

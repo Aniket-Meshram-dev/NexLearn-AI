@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="favicon-grad-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="50%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="favicon-grad-sec" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="60%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+  </defs>
+  <!-- Background rounded squircle -->
+  <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#favicon-grad-primary)" />
+  <rect x="3" y="3" width="42" height="42" rx="11" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none" />
+  <!-- Stylized 'N' -->
+  <path d="M13 14C13 12.9 13.9 12 15 12H16.5C17.6 12 18.5 12.9 18.5 14V34C18.5 35.1 17.6 36 16.5 36H15C13.9 36 13 35.1 13 34V14Z" fill="#FFFFFF" />
+  <path d="M16 13.5L32 34.5C32.6 35.3 33.7 35.5 34.5 35C34.8 34.8 35 34.4 35 34V14C35 12.9 34.1 12 33 12H31.5C30.4 12 29.5 12.9 29.5 14V27.5L18.2 12.8C17.6 12 16.5 11.8 15.7 12.4C15.2 12.7 15 13.1 15 13.5H16Z" fill="url(#favicon-grad-sec)" />
+  <path d="M29.5 14C29.5 12.9 30.4 12 31.5 12H33C34.1 12 35 12.9 35 14V24H29.5V14Z" fill="#FFFFFF" fill-opacity="0.95" />
+  <!-- AI Spark -->
+  <circle cx="34" cy="12.5" r="3.5" fill="#38BDF8" />
+  <circle cx="34" cy="12.5" r="2" fill="#FFFFFF" />
+</svg>

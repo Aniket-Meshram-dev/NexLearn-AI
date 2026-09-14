@@ -12,16 +12,24 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+      document.documentElement.style.colorScheme = savedTheme;
+    }
   }, []);
 
-  const toggleTheme = (newTheme) => {
+  const toggleTheme = (newTheme: string) => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.toggle('dark', newTheme === 'dark');
+      document.documentElement.style.colorScheme = newTheme;
+    }
   };
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme: toggleTheme }}>
-      <div className={theme === 'dark' ? 'dark' : ''} style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      <div className={theme === 'dark' ? 'dark' : ''} style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
         {children}
       </div>
     </ThemeContext.Provider>

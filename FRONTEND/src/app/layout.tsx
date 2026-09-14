@@ -6,6 +6,11 @@ import AppLayout from '@/components/AppLayout';
 export const metadata = {
   title: 'NexLearn — AI-Powered Intelligent Learning Ecosystem',
   description: 'NexLearn is an AI-native educational platform that generates structured courses, provides interactive learning, tracks performance, and delivers personalized recommendations.',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({ children }) {

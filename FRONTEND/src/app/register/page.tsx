@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import NexLearnLogo from '@/components/NexLearnLogo';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -55,8 +56,8 @@ export default function RegisterPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div style={{ textAlign: 'center', marginBottom: 8 }}>
-          <span style={{ fontSize: '2.5rem' }}>🎓</span>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+          <NexLearnLogo size="lg" clickable={true} />
         </div>
         <h1>Create Account</h1>
         <p className="auth-subtitle">Start your intelligent learning journey</p>
