@@ -27,7 +27,7 @@ async function sendMailMessage({
 }: SendMailOptions) {
   const brevoApiKey = process.env.BREVO_API_KEY;
   const brevoSenderEmail = process.env.BREVO_SENDER_EMAIL;
-  const senderDisplayName = senderName || process.env.BREVO_SENDER_NAME || 'NexLearn';
+  const senderDisplayName = senderName || process.env.BREVO_SENDER_NAME || 'NexLearn AI';
 
   if (!brevoApiKey || !brevoSenderEmail) {
     console.error('[Brevo Mailer] Missing BREVO_API_KEY or BREVO_SENDER_EMAIL environment variable. Email aborted for:', to);
@@ -79,479 +79,506 @@ async function sendMailMessage({
   }
 }
 
+/**
+ * Base SaaS Email Layout Wrapper
+ * Produces an ultra-clean, modern, SaaS-grade responsive email (Linear/Stripe style)
+ */
+function renderSaaSEmailLayout({
+  badgeText,
+  badgeBg = '#EEF2FF',
+  badgeColor = '#4F46E5',
+  badgeBorder = '#E0E7FF',
+  icon,
+  iconBg = 'linear-gradient(135deg, #EEF2FF 0%, #EDE9FE 100%)',
+  iconBorder = '#E0E7FF',
+  title,
+  subtitle,
+  bodyHtml,
+  ctaText,
+  ctaUrl,
+  footerExtra,
+}: {
+  badgeText?: string;
+  badgeBg?: string;
+  badgeColor?: string;
+  badgeBorder?: string;
+  icon: string;
+  iconBg?: string;
+  iconBorder?: string;
+  title: string;
+  subtitle: string;
+  bodyHtml: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  footerExtra?: string;
+}) {
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const currentYear = new Date().getFullYear();
 
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>${title}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background-color: #F8FAFC !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+      -webkit-font-smoothing: antialiased !important;
+      -webkit-text-size-adjust: 100% !important;
+    }
+    table {
+      border-collapse: collapse !important;
+      mso-table-lspace: 0pt !important;
+      mso-table-rspace: 0pt !important;
+    }
+    img {
+      border: 0 !important;
+      outline: none !important;
+      text-decoration: none !important;
+    }
+    @media only screen and (max-width: 600px) {
+      .email-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        border: none !important;
+      }
+      .email-content {
+        padding: 32px 20px !important;
+      }
+      .email-footer {
+        padding: 24px 20px !important;
+      }
+      .otp-code {
+        font-size: 30px !important;
+        letter-spacing: 5px !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 40px 16px; background-color: #F1F5F9; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 560px; margin: 0 auto;">
+    
+    <!-- Outer Card Container -->
+    <tr>
+      <td align="center">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container" style="background-color: #FFFFFF; border-radius: 24px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);">
+          
+          <!-- Top Cyber Radiant Accent Bar -->
+          <tr>
+            <td style="height: 6px; width: 100%; background: linear-gradient(90deg, #4F46E5 0%, #8B5CF6 35%, #EC4899 70%, #06B6D4 100%);"></td>
+          </tr>
+
+          <!-- Main Content Area -->
+          <tr>
+            <td class="email-content" style="padding: 44px 40px 36px;">
+              
+              <!-- NexLearn Brand Header -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 28px;">
+                <tr>
+                  <td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <!-- Stylized Geometric Book Logo Mark -->
+                        <td style="vertical-align: middle; padding-right: 10px;">
+                          <div style="width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #4F46E5 0%, #8B5CF6 100%); text-align: center; line-height: 32px; font-size: 16px; color: #FFFFFF; font-weight: 800; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35);">
+                            N
+                          </div>
+                        </td>
+                        <!-- NexLearn Typography -->
+                        <td style="vertical-align: middle;">
+                          <span style="font-size: 20px; font-weight: 800; color: #0F172A; letter-spacing: -0.03em;">NexLearn</span>
+                        </td>
+                        <!-- AI Pill Badge -->
+                        <td style="vertical-align: middle; padding-left: 6px;">
+                          <span style="background: linear-gradient(135deg, #4F46E5, #8B5CF6); color: #FFFFFF; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em; vertical-align: middle; display: inline-block;">AI</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Hero Category Badge (Optional) -->
+              ${badgeText ? `
+              <div style="text-align: center; margin-bottom: 20px;">
+                <span style="display: inline-block; background-color: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 4px 14px; border-radius: 9999px;">
+                  ${badgeText}
+                </span>
+              </div>
+              ` : ''}
+
+              <!-- Icon Avatar Circle -->
+              <div style="text-align: center; margin-bottom: 20px;">
+                <div style="width: 64px; height: 64px; border-radius: 20px; background: ${iconBg}; border: 1px solid ${iconBorder}; display: inline-block; text-align: center; line-height: 64px; font-size: 30px; box-shadow: 0 6px 16px rgba(99, 102, 241, 0.12);">
+                  ${icon}
+                </div>
+              </div>
+
+              <!-- Main Heading -->
+              <h1 style="font-size: 24px; font-weight: 800; color: #0F172A; margin: 0 0 8px; text-align: center; letter-spacing: -0.025em; line-height: 1.3;">
+                ${title}
+              </h1>
+
+              <!-- Subtitle -->
+              <p style="color: #64748B; font-size: 14px; margin: 0 0 32px; text-align: center; font-weight: 500; line-height: 1.5;">
+                ${subtitle}
+              </p>
+
+              <!-- Dynamic Body HTML -->
+              <div style="color: #334155; font-size: 15px; line-height: 1.65;">
+                ${bodyHtml}
+              </div>
+
+              <!-- Primary CTA Button (Optional) -->
+              ${ctaText && ctaUrl ? `
+              <div style="text-align: center; margin: 32px 0 20px;">
+                <a href="${ctaUrl}" style="background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%); color: #FFFFFF; padding: 14px 34px; border-radius: 12px; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.4); letter-spacing: 0.01em;">
+                  ${ctaText} &rarr;
+                </a>
+              </div>
+              ` : ''}
+
+            </td>
+          </tr>
+
+          <!-- SaaS Footer -->
+          <tr>
+            <td class="email-footer" style="background-color: #F8FAFC; padding: 30px 40px; text-align: center; border-top: 1px solid #E2E8F0;">
+              
+              <!-- Navigation Links -->
+              <div style="margin-bottom: 14px;">
+                <a href="${baseUrl}/dashboard" style="color: #64748B; font-size: 12px; font-weight: 600; text-decoration: none; margin: 0 10px;">Dashboard</a>
+                <span style="color: #CBD5E1;">&bull;</span>
+                <a href="${baseUrl}/settings" style="color: #64748B; font-size: 12px; font-weight: 600; text-decoration: none; margin: 0 10px;">Security</a>
+                <span style="color: #CBD5E1;">&bull;</span>
+                <a href="${baseUrl}/discover" style="color: #64748B; font-size: 12px; font-weight: 600; text-decoration: none; margin: 0 10px;">Courses</a>
+              </div>
+
+              ${footerExtra ? `
+              <p style="color: #94A3B8; font-size: 12px; margin: 0 0 10px; line-height: 1.5;">
+                ${footerExtra}
+              </p>
+              ` : ''}
+
+              <p style="color: #94A3B8; font-size: 11px; margin: 0 0 4px; line-height: 1.5;">
+                Encrypted &bull; Autonomous AI Course Synthesizer &bull; Zero-Trust Architecture
+              </p>
+
+              <p style="color: #CBD5E1; font-size: 11px; margin: 0;">
+                &copy; ${currentYear} NexLearn AI Inc. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+}
+
+/**
+ * Reusable Modern OTP Display Box
+ */
+function renderOtpBox(otp: string, label = 'One-Time Verification Code', accentColor = '#4F46E5', bgTint = '#F8FAFC', borderTint = '#E2E8F0') {
+  return `
+    <div style="background-color: ${bgTint}; border: 2px dashed ${borderTint}; border-radius: 18px; padding: 24px 20px; text-align: center; margin: 28px 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.015);">
+      <p style="color: #64748B; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; margin: 0 0 10px;">
+        ${label}
+      </p>
+      <div class="otp-code" style="font-size: 38px; font-weight: 800; color: ${accentColor}; letter-spacing: 8px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; margin: 0;">
+        ${otp}
+      </div>
+      <div style="margin-top: 10px; font-size: 12px; color: #94A3B8; font-weight: 500;">
+        ⏱️ Expires in 10 minutes &bull; Single-use authorization
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Reusable Alert Callout Box
+ */
+function renderAlertBox(title: string, message: string, type: 'warning' | 'info' | 'danger' | 'success' = 'info') {
+  const styles = {
+    info: { bg: '#EFF6FF', border: '#3B82F6', text: '#1E40AF', icon: '💡' },
+    warning: { bg: '#FFFBEB', border: '#F59E0B', text: '#B45309', icon: '⚠️' },
+    danger: { bg: '#FFF1F2', border: '#F43F5E', text: '#9F1239', icon: '🛡️' },
+    success: { bg: '#ECFDF5', border: '#10B981', text: '#065F46', icon: '✓' },
+  }[type];
+
+  return `
+    <div style="background-color: ${styles.bg}; border-left: 4px solid ${styles.border}; padding: 14px 18px; border-radius: 6px 12px 12px 6px; margin: 22px 0;">
+      <p style="margin: 0; color: ${styles.text}; font-size: 13px; font-weight: 500; line-height: 1.5;">
+        <strong style="font-weight: 700;">${styles.icon} ${title}:</strong> ${message}
+      </p>
+    </div>
+  `;
+}
+
+// --------------------------------------------------------------------------
+// 1. Password Reset OTP Email
+// --------------------------------------------------------------------------
 export async function sendOTPEmail(email: string, otp: string) {
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Account Security',
+    badgeBg: '#EEF2FF',
+    badgeColor: '#4F46E5',
+    icon: '🔑',
+    title: 'Reset Your Password',
+    subtitle: 'Secure authorization requested for your NexLearn account',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello,</p>
+      <p>We received a request to securely reset the password for your NexLearn account. Enter the verification key below to choose a new password.</p>
+      
+      ${renderOtpBox(otp, 'Your Password Reset Key', '#4F46E5', '#F5F3FF', '#DDD6FE')}
+
+      ${renderAlertBox('Security Notice', 'This code expires in exactly 10 minutes. If you did not request a password reset, your account is completely safe and no action is required.', 'warning')}
+
+      <p style="color: #94A3B8; font-size: 13px; line-height: 1.6; margin: 24px 0 0; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+        For your protection, never forward or share this code with anyone. NexLearn support will never ask for your verification code.
+      </p>
+    `,
+    footerExtra: 'You are receiving this security notification because a password change was requested.',
+  });
+
   return await sendMailMessage({
     to: email,
-    subject: '🔐 Your NexLearn Password Reset OTP',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        </style>
-      </head>
-      <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 40px 16px; -webkit-font-smoothing: antialiased;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #ffffff; border-radius: 24px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.04); overflow: hidden; border: 1px solid #e2e8f0;">
-
-          <!-- Top decorative line -->
-          <tr>
-            <td style="height: 6px; width: 100%; background: linear-gradient(90deg, #4f46e5, #8b5cf6, #ec4899);"></td>
-          </tr>
-          
-          <tr>
-            <td style="padding: 48px 40px;">
-              <!-- Logo area -->
-              <div style="text-align: center; margin-bottom: 32px;">
-                <div style="background: linear-gradient(135deg, #eef2ff, #f3e8ff); width: 64px; height: 64px; border-radius: 18px; display: inline-block; text-align: center; line-height: 64px; font-size: 32px; border: 1px solid #e0e7ff; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);">
-                  🎓
-                </div>
-              </div>
-
-              <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 6px; text-align: center; letter-spacing: -0.02em;">
-                Reset Your Password
-              </h1>
-              <p style="color: #64748b; font-size: 14px; margin: 0 0 32px; text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                NexLearn Intelligent Learning Platform
-              </p>
-
-              <div style="color: #334155; font-size: 16px; line-height: 1.6; margin-bottom: 32px;">
-                <p style="margin-top: 0;">Hello,</p>
-                <p>We received a request to securely reset your password. Please use the verification code below to gain back access to your account.</p>
-              </div>
-
-              <!-- OTP Box -->
-              <div style="background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 16px; padding: 28px 20px; text-align: center; margin-bottom: 32px;">
-                <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 12px;">
-                  Your Verification Code
-                </p>
-                <div style="font-size: 38px; font-weight: 800; color: #3b82f6; letter-spacing: 4px; white-space: nowrap; font-family: monospace;">
-                  ${otp}
-                </div>
-              </div>
-
-              <div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 32px;">
-                <p style="margin: 0; color: #b45309; font-size: 14px; font-weight: 500; line-height: 1.5;">
-                  <strong style="font-weight: 700;">Note:</strong> This code is sensitive and expires in exactly <strong>10 minutes</strong>. Do not share it.
-                </p>
-              </div>
-
-              <p style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin: 0; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                Didn't request this change? You can safely ignore this email. Your dashboard security is fully intact.
-              </p>
-            </td>
-          </tr>
-          
-          <!-- Footer -->
-          <tr>
-            <td style="background-color: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 12px; margin: 0; font-weight: 500;">
-                © ${new Date().getFullYear()} NexLearn AI. Powered by Advanced Learning Algorithms.
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </body>
-      </html>
-    `,
+    subject: '🔐 Your NexLearn Password Reset Code',
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 2. Account Registration Verification OTP
+// --------------------------------------------------------------------------
 export async function sendVerificationEmail(email: string, otp: string) {
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Welcome to NexLearn',
+    badgeBg: '#ECFDF5',
+    badgeColor: '#059669',
+    badgeBorder: '#A7F3D0',
+    icon: '✨',
+    iconBg: 'linear-gradient(135deg, #ECFDF5 0%, #EFF6FF 100%)',
+    iconBorder: '#A7F3D0',
+    title: 'Verify Your Email Address',
+    subtitle: 'Activate your autonomous AI course synthesizer',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello,</p>
+      <p>Welcome to <strong>NexLearn AI</strong>! You're one step away from synthesizing hyper-personalized courses, engaging with your real-time AI mentor, and earning verified industry credentials.</p>
+      
+      ${renderOtpBox(otp, 'Your Account Activation Code', '#059669', '#F0FDF4', '#BBF7D0')}
+
+      ${renderAlertBox('Instant Access', 'Verifying your email unlocks your full course workspace, mind map visualizers, and cloud progress sync across all your devices.', 'success')}
+
+      <p style="color: #94A3B8; font-size: 13px; line-height: 1.6; margin: 24px 0 0; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+        Didn't create an account with NexLearn? You can safely disregard this email.
+      </p>
+    `,
+    ctaText: 'Open Verification Portal',
+    ctaUrl: `${baseUrl}/verify-account?email=${encodeURIComponent(email)}`,
+  });
+
   return await sendMailMessage({
     to: email,
-    subject: '🎓 Verify Your NexLearn Account',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        </style>
-      </head>
-      <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 40px 16px; -webkit-font-smoothing: antialiased;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #ffffff; border-radius: 24px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.04); overflow: hidden; border: 1px solid #e2e8f0;">
-
-          <!-- Top decorative line -->
-          <tr>
-            <td style="height: 6px; width: 100%; background: linear-gradient(90deg, #10b981, #3b82f6, #6366f1);"></td>
-          </tr>
-          
-          <tr>
-            <td style="padding: 48px 40px;">
-              <!-- Logo area -->
-              <div style="text-align: center; margin-bottom: 32px;">
-                <div style="background: linear-gradient(135deg, #ecfdf5, #eff6ff); width: 64px; height: 64px; border-radius: 18px; display: inline-block; text-align: center; line-height: 64px; font-size: 32px; border: 1px solid #d1fae5; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);">
-                   🛡️
-                </div>
-              </div>
-
-              <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 6px; text-align: center; letter-spacing: -0.02em;">
-                Verify Your Account
-              </h1>
-              <p style="color: #64748b; font-size: 14px; margin: 0 0 32px; text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                NexLearn Platform
-              </p>
-
-              <div style="color: #334155; font-size: 16px; line-height: 1.6; margin-bottom: 32px;">
-                <p style="margin-top: 0;">Hello,</p>
-                <p>Welcome to NexLearn! To complete your registration and unlock all interactive AI features, please use the OTP code below.</p>
-              </div>
-
-              <!-- OTP Box -->
-              <div style="background-color: #f0fdf4; border: 2px dashed #bbf7d0; border-radius: 16px; padding: 28px 20px; text-align: center; margin-bottom: 32px;">
-                <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 12px;">
-                  Your Verification Code
-                </p>
-                <div style="font-size: 38px; font-weight: 800; color: #059669; letter-spacing: 4px; white-space: nowrap; font-family: monospace;">
-                  ${otp}
-                </div>
-              </div>
-
-              <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 32px;">
-                <p style="margin: 0; color: #1d4ed8; font-size: 14px; font-weight: 500; line-height: 1.5;">
-                  <strong style="font-weight: 700;">Tip:</strong> Verifying your account ensures you can earn verified certificates and track advanced progress.
-                </p>
-              </div>
-
-              <p style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin: 0; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                Didn't create an account with us? You can safely ignore this email.
-              </p>
-            </td>
-          </tr>
-          
-          <!-- Footer -->
-          <tr>
-            <td style="background-color: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 12px; margin: 0; font-weight: 500;">
-                © ${new Date().getFullYear()} NexLearn AI. All rights reserved.
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </body>
-      </html>
-    `,
+    subject: '✨ Verify Your NexLearn Account Code',
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 3. Enable 2FA Security Code
+// --------------------------------------------------------------------------
 export async function sendEnable2FAEmail(email: string, otp: string) {
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Security Upgrade',
+    badgeBg: '#F5F3FF',
+    badgeColor: '#7C3AED',
+    badgeBorder: '#DDD6FE',
+    icon: '🛡️',
+    iconBg: 'linear-gradient(135deg, #F5F3FF 0%, #FAF5FF 100%)',
+    iconBorder: '#DDD6FE',
+    title: 'Enable Two-Factor Authentication',
+    subtitle: 'Authorize two-step verification for your workspace',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello,</p>
+      <p>You have requested to activate Two-Factor Authentication (2FA) on your NexLearn account. Enter the verification code below to confirm and activate this upgrade.</p>
+      
+      ${renderOtpBox(otp, '2FA Activation Code', '#7C3AED', '#FAF5FF', '#E9D5FF')}
+
+      ${renderAlertBox('Enterprise Grade Protection', 'With 2FA enabled, each sign-in requires both your password and a unique security code delivered to your verified email.', 'info')}
+
+      <p style="color: #94A3B8; font-size: 13px; line-height: 1.6; margin: 24px 0 0; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+        If you did not initiate this security change, please change your password immediately in your account settings.
+      </p>
+    `,
+  });
+
   return await sendMailMessage({
     to: email,
-    subject: '🔐 Code to Enable Two-Factor Authentication',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        </style>
-      </head>
-      <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 40px 16px; -webkit-font-smoothing: antialiased;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #ffffff; border-radius: 24px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.04); overflow: hidden; border: 1px solid #e2e8f0;">
-
-          <!-- Top decorative line -->
-          <tr>
-            <td style="height: 6px; width: 100%; background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);"></td>
-          </tr>
-          
-          <tr>
-            <td style="padding: 48px 40px;">
-              <!-- Logo area -->
-              <div style="text-align: center; margin-bottom: 32px;">
-                <div style="background: linear-gradient(135deg, #f5f3ff, #faf5ff); width: 64px; height: 64px; border-radius: 18px; display: inline-block; text-align: center; line-height: 64px; font-size: 32px; border: 1px solid #ddd6fe; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.08);">
-                   🛡️
-                </div>
-              </div>
-
-              <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 6px; text-align: center; letter-spacing: -0.02em;">
-                Enable 2FA Security
-              </h1>
-              <p style="color: #64748b; font-size: 14px; margin: 0 0 32px; text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                NexLearn Platform
-              </p>
-
-              <div style="color: #334155; font-size: 16px; line-height: 1.6; margin-bottom: 32px;">
-                <p style="margin-top: 0;">Hello,</p>
-                <p>You have requested to enable Two-Factor Authentication (2FA) on your NexLearn account. Please use the activation code below to confirm this security upgrade.</p>
-              </div>
-
-              <!-- OTP Box -->
-              <div style="background-color: #fdf2f8; border: 2px dashed #fbcfe8; border-radius: 16px; padding: 28px 20px; text-align: center; margin-bottom: 32px;">
-                <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 12px;">
-                  Your Activation Code
-                </p>
-                <div style="font-size: 38px; font-weight: 800; color: #db2777; letter-spacing: 4px; white-space: nowrap; font-family: monospace;">
-                  ${otp}
-                </div>
-              </div>
-
-              <div style="background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 14px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 32px;">
-                <p style="margin: 0; color: #0369a1; font-size: 14px; font-weight: 500; line-height: 1.5;">
-                  <strong style="font-weight: 700;">Important:</strong> Enabling 2FA adds a powerful layer of protection against unauthorized access to your learning credentials.
-                </p>
-              </div>
-
-              <p style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin: 0; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                Didn't request this? Please ignore this message and ensure your password remains private.
-              </p>
-            </td>
-          </tr>
-          
-          <!-- Footer -->
-          <tr>
-            <td style="background-color: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 12px; margin: 0; font-weight: 500;">
-                © ${new Date().getFullYear()} NexLearn AI.
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </body>
-      </html>
-    `,
+    subject: '🛡️ Code to Enable Two-Factor Authentication',
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 4. Login 2FA Verification OTP
+// --------------------------------------------------------------------------
 export async function send2FAEmail(email: string, otp: string) {
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Two-Factor Challenge',
+    badgeBg: '#EEF2FF',
+    badgeColor: '#4F46E5',
+    icon: '🔐',
+    title: 'Login Verification Code',
+    subtitle: 'Sign-in attempt detected on your account',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello,</p>
+      <p>A sign-in attempt was detected for your NexLearn account. Please use the secure authorization key below to complete your login.</p>
+      
+      ${renderOtpBox(otp, 'Your Login Security Key', '#4F46E5', '#EEF2FF', '#C7D2FE')}
+
+      ${renderAlertBox('Security Check', 'Never share this code with anyone. NexLearn engineers and staff will never ask for your 2FA code.', 'danger')}
+
+      <p style="color: #94A3B8; font-size: 13px; line-height: 1.6; margin: 24px 0 0; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+        If this was not you, we recommend locking down your credentials immediately and resetting your master password.
+      </p>
+    `,
+  });
+
   return await sendMailMessage({
     to: email,
-    subject: '🔐 Your Login Verification OTP',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        </style>
-      </head>
-      <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 40px 16px; -webkit-font-smoothing: antialiased;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #ffffff; border-radius: 24px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.04); overflow: hidden; border: 1px solid #e2e8f0;">
-
-          <!-- Top decorative line -->
-          <tr>
-            <td style="height: 6px; width: 100%; background: linear-gradient(90deg, #6366f1, #4f46e5, #4338ca);"></td>
-          </tr>
-          
-          <tr>
-            <td style="padding: 48px 40px;">
-              <!-- Logo area -->
-              <div style="text-align: center; margin-bottom: 32px;">
-                <div style="background: linear-gradient(135deg, #eef2ff, #e0e7ff); width: 64px; height: 64px; border-radius: 18px; display: inline-block; text-align: center; line-height: 64px; font-size: 32px; border: 1px solid #c7d2fe; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);">
-                   🔐
-                </div>
-              </div>
-
-              <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 6px; text-align: center; letter-spacing: -0.02em;">
-                Login Verification
-              </h1>
-              <p style="color: #64748b; font-size: 14px; margin: 0 0 32px; text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                NexLearn Platform
-              </p>
-
-              <div style="color: #334155; font-size: 16px; line-height: 1.6; margin-bottom: 32px;">
-                <p style="margin-top: 0;">Hello,</p>
-                <p>We've detected a sign-in attempt on your NexLearn account. Please use the secure code below to complete your login process.</p>
-              </div>
-
-              <!-- OTP Box -->
-              <div style="background-color: #f5f3ff; border: 2px dashed #ddd6fe; border-radius: 16px; padding: 28px 20px; text-align: center; margin-bottom: 32px;">
-                <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 12px;">
-                  Your Secure Key
-                </p>
-                <div style="font-size: 38px; font-weight: 800; color: #4f46e5; letter-spacing: 4px; white-space: nowrap; font-family: monospace;">
-                  ${otp}
-                </div>
-              </div>
-
-              <div style="background-color: #fff1f2; border-left: 4px solid #f43f5e; padding: 14px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 32px;">
-                <p style="margin: 0; color: #be123c; font-size: 14px; font-weight: 500; line-height: 1.5;">
-                  <strong style="font-weight: 700;">Security Check:</strong> This code was generated for your current sign-in. Never share this code with anyone.
-                </p>
-              </div>
-
-              <p style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin: 0; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                Not you? We recommend changing your password immediately.
-              </p>
-            </td>
-          </tr>
-          
-          <!-- Footer -->
-          <tr>
-            <td style="background-color: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 12px; margin: 0; font-weight: 500;">
-                © ${new Date().getFullYear()} NexLearn AI.
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </body>
-      </html>
-    `,
+    subject: '🔐 Your NexLearn Login Verification Code',
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 5. Disable 2FA Security Code
+// --------------------------------------------------------------------------
 export async function sendDisable2FAEmail(email: string, otp: string) {
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Critical Security Alert',
+    badgeBg: '#FFF1F2',
+    badgeColor: '#E11D48',
+    badgeBorder: '#FECDD3',
+    icon: '⚠️',
+    iconBg: 'linear-gradient(135deg, #FFF1F2 0%, #FFF7ED 100%)',
+    iconBorder: '#FECDD3',
+    title: 'Disable Two-Factor Authentication',
+    subtitle: 'Confirmation required to reduce account security',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello,</p>
+      <p>A request was submitted to turn off Two-Factor Authentication (2FA) for your NexLearn account. Because this lowers your security shield, your confirmation is required.</p>
+      
+      ${renderOtpBox(otp, 'Deactivation Authorization Code', '#E11D48', '#FFF1F2', '#FECDD3')}
+
+      ${renderAlertBox('Security Warning', 'Disabling 2FA makes your account significantly more vulnerable to unauthorized access and credential compromise.', 'danger')}
+
+      <p style="color: #94A3B8; font-size: 13px; line-height: 1.6; margin: 24px 0 0; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+        If you did not request this, someone may be attempting to access your account. Reject this code and update your password immediately.
+      </p>
+    `,
+  });
+
   return await sendMailMessage({
     to: email,
-    subject: '⚠️ Important: Code to Disable Two-Factor Authentication',
-    html: `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        </style>
-      </head>
-      <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 40px 16px; -webkit-font-smoothing: antialiased;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #ffffff; border-radius: 24px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.04); overflow: hidden; border: 1px solid #e2e8f0;">
-
-          <!-- Top decorative line -->
-          <tr>
-            <td style="height: 6px; width: 100%; background: linear-gradient(90deg, #f43f5e, #f97316, #fbbf24);"></td>
-          </tr>
-          
-          <tr>
-            <td style="padding: 48px 40px;">
-              <!-- Logo area -->
-              <div style="text-align: center; margin-bottom: 32px;">
-                <div style="background: linear-gradient(135deg, #fff1f2, #fff7ed); width: 64px; height: 64px; border-radius: 18px; display: inline-block; text-align: center; line-height: 64px; font-size: 32px; border: 1px solid #fecaca; box-shadow: 0 4px 12px rgba(244, 63, 94, 0.08);">
-                   🔓
-                </div>
-              </div>
-
-              <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 6px; text-align: center; letter-spacing: -0.02em;">
-                Disable 2FA Security
-              </h1>
-              <p style="color: #64748b; font-size: 14px; margin: 0 0 32px; text-align: center; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">
-                NexLearn Platform
-              </p>
-
-              <div style="color: #334155; font-size: 16px; line-height: 1.6; margin-bottom: 32px;">
-                <p style="margin-top: 0;">Hello,</p>
-                <p>A request was made to disable Two-Factor Authentication (2FA) on your NexLearn account. Because this reduces your security level, we require your confirmation to proceed.</p>
-              </div>
-
-              <!-- OTP Box -->
-              <div style="background-color: #fff1f2; border: 2px dashed #fecade; border-radius: 16px; padding: 28px 20px; text-align: center; margin-bottom: 32px;">
-                <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; margin: 0 0 12px;">
-                  Authorisation Code
-                </p>
-                <div style="font-size: 38px; font-weight: 800; color: #e11d48; letter-spacing: 4px; white-space: nowrap; font-family: monospace;">
-                  ${otp}
-                </div>
-              </div>
-
-              <div style="background-color: #fef2f2; border-left: 4px solid #f87171; padding: 14px 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 32px;">
-                <p style="margin: 0; color: #991b1b; font-size: 14px; font-weight: 500; line-height: 1.5;">
-                  <strong style="font-weight: 700;">Security Warning:</strong> By disabling 2FA, your account becomes more vulnerable to unauthorized access. We strongly recommend keeping it active.
-                </p>
-              </div>
-
-              <p style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin: 0; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                Not made by you? Please change your password and keep 2FA enabled to protect your academic records.
-              </p>
-            </td>
-          </tr>
-          
-          <!-- Footer -->
-          <tr>
-            <td style="background-color: #f8fafc; padding: 24px; text-align: center; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; font-size: 12px; margin: 0; font-weight: 500;">
-                © ${new Date().getFullYear()} NexLearn AI.
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </body>
-      </html>
-    `,
+    subject: '⚠️ Warning: Code to Disable Two-Factor Authentication',
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 6. Email Change Authorization Code
+// --------------------------------------------------------------------------
 export async function sendEmailChangeAuthEmail(toEmail: string, otp: string, newEmail: string) {
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Account Transfer',
+    badgeBg: '#FEF3C7',
+    badgeColor: '#D97706',
+    badgeBorder: '#FDE68A',
+    icon: '📬',
+    iconBg: 'linear-gradient(135deg, #FEF3C7 0%, #FFFBEB 100%)',
+    iconBorder: '#FDE68A',
+    title: 'Authorize Email Change',
+    subtitle: 'Confirm transition to your new email address',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello,</p>
+      <p>We received a formal request to update your primary NexLearn account email from <strong>${toEmail}</strong> to <strong style="color: #0F172A;">${newEmail}</strong>.</p>
+      
+      ${renderOtpBox(otp, 'Email Transfer Authorization Key', '#D97706', '#FEFCE8', '#FEF08A')}
+
+      ${renderAlertBox('Account Migration', 'Once approved, all future course notifications, certificates, and security alerts will be directed exclusively to your new email.', 'warning')}
+
+      <p style="color: #94A3B8; font-size: 13px; line-height: 1.6; margin: 24px 0 0; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+        If you did not initiate this transfer, someone may have compromised your access. Change your password immediately to secure your learning catalog.
+      </p>
+    `,
+  });
+
   return await sendMailMessage({
     to: toEmail,
-    subject: '⚠️ Authorize Your NexLearn Account Email Change',
-    html: `
-      <!DOCTYPE html><html>
-      <head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-      <body style="font-family:'Inter',-apple-system,sans-serif;background:#f1f5f9;margin:0;padding:40px 16px;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:520px;background:#ffffff;border-radius:24px;box-shadow:0 12px 32px rgba(15,23,42,0.06);overflow:hidden;border:1px solid #e2e8f0;">
-          <tr><td style="height:6px;background:linear-gradient(90deg,#f59e0b,#eab308,#ca8a04);"></td></tr>
-          <tr><td style="padding:48px 40px;">
-            <div style="text-align:center;margin-bottom:28px;">
-              <div style="background:#fefce8;width:64px;height:64px;border-radius:18px;display:inline-block;text-align:center;line-height:64px;font-size:28px;border:1px solid #fde68a;">✉️</div>
-            </div>
-            <h1 style="font-size:22px;font-weight:800;color:#0f172a;margin:0 0 4px;text-align:center;">Email Change Request</h1>
-            <p style="color:#64748b;font-size:13px;margin:0 0 28px;text-align:center;text-transform:uppercase;letter-spacing:0.06em;">NexLearn Platform</p>
-            <p style="color:#334155;font-size:15px;line-height:1.6;margin-bottom:8px;">Hello,</p>
-            <p style="color:#334155;font-size:15px;line-height:1.6;margin-bottom:28px;">We received a request to change your account email to <strong style="color:#0f172a;">${newEmail}</strong>. Use the code below to authorize this change. It expires in <strong>10 minutes</strong>.</p>
-            <div style="background:#fefce8;border:2px dashed #fef08a;border-radius:16px;padding:28px 20px;text-align:center;margin-bottom:28px;">
-              <p style="color:#64748b;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;margin:0 0 10px;">Authorization Code</p>
-              <div style="font-size:38px;font-weight:800;color:#ca8a04;letter-spacing:6px;font-family:monospace;">${otp}</div>
-            </div>
-            <div style="background:#fef2f2;border-left:4px solid #f87171;padding:14px 16px;border-radius:4px 8px 8px 4px;margin-bottom:24px;">
-              <p style="margin:0;color:#991b1b;font-size:13px;font-weight:500;line-height:1.5;"><strong>Security Warning:</strong> If you did not request this, someone may have unauthorized access to your account. Please change your password immediately.</p>
-            </div>
-            <p style="color:#94a3b8;font-size:12px;line-height:1.6;margin:0;border-top:1px solid #e2e8f0;padding-top:20px;">Once verified, your account email will be changed from ${toEmail} to ${newEmail}.</p>
-          </td></tr>
-          <tr><td style="background:#f8fafc;padding:20px;text-align:center;border-top:1px solid #e2e8f0;">
-            <p style="color:#64748b;font-size:12px;margin:0;">© ${new Date().getFullYear()} NexLearn AI. All rights reserved.</p>
-          </td></tr>
-        </table>
-      </body></html>
-    `,
+    subject: '📬 Authorize Your NexLearn Account Email Change',
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 7. General Notification Email
+// --------------------------------------------------------------------------
 export async function sendNotificationEmail(email: string, title: string, message: string, userName = 'Student') {
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
   const emojiMatch = title.match(/[\u{1F300}-\u{1F6FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2300}-\u{23FF}\u{1F1E6}-\u{1F1FF}]/u);
   const icon = emojiMatch ? emojiMatch[0] : '🔔';
   const cleanTitle = title.replace(/[\u{1F300}-\u{1F6FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2300}-\u{23FF}\u{1F1E6}-\u{1F1FF}]/ug, '').trim();
+
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Workspace Activity',
+    badgeBg: '#F0F9FF',
+    badgeColor: '#0284C7',
+    badgeBorder: '#BAE6FD',
+    icon,
+    title: cleanTitle || 'New Learning Notification',
+    subtitle: 'Important update regarding your active courses and milestones',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello <strong>${userName}</strong>,</p>
+      
+      <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-left: 4px solid #4F46E5; padding: 20px 24px; border-radius: 8px 16px 16px 8px; margin: 24px 0;">
+        <p style="color: #1E293B; font-size: 15px; line-height: 1.65; margin: 0;">
+          ${message}
+        </p>
+      </div>
+
+      <p style="color: #64748B; font-size: 14px; line-height: 1.6;">
+        Jump back into your dashboard to continue your learning streak, test new modules, or review active flashcards.
+      </p>
+    `,
+    ctaText: 'Open Workspace Dashboard',
+    ctaUrl: `${baseUrl}/dashboard`,
+  });
 
   return await sendMailMessage({
     to: email,
     toName: userName,
     subject: title,
-    html: `
-      <!DOCTYPE html><html>
-      <head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-      <body style="font-family:'Inter',-apple-system,sans-serif;background:#f1f5f9;margin:0;padding:40px 16px;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:520px;background:#ffffff;border-radius:24px;box-shadow:0 12px 32px rgba(15,23,42,0.06);overflow:hidden;border:1px solid #e2e8f0;">
-          <tr><td style="height:6px;background:linear-gradient(90deg,#0ea5e9,#3b82f6,#6366f1);"></td></tr>
-          <tr><td style="padding:48px 40px;">
-            <div style="text-align:center;margin-bottom:28px;">
-              <div style="background:#f0f9ff;width:64px;height:64px;border-radius:18px;display:inline-block;text-align:center;line-height:64px;font-size:28px;border:1px solid #bae6fd;">${icon}</div>
-            </div>
-            <h1 style="font-size:22px;font-weight:800;color:#0f172a;margin:0 0 4px;text-align:center;">${cleanTitle}</h1>
-            <p style="color: #64748b; font-size: 13px; margin: 0 0 28px; text-align: center; text-transform: uppercase; letter-spacing: 0.06em;">NexLearn Notification</p>
-            <p style="color:#334155;font-size:15px;line-height:1.6;margin-bottom:8px;">Hello ${userName},</p>
-            <div style="background:#f8fafc;border-left:4px solid #3b82f6;padding:16px 20px;border-radius:4px 8px 8px 4px;margin-bottom:28px;margin-top:20px;">
-              <p style="color:#1e293b;font-size:15px;line-height:1.6;margin:0;">${message}</p>
-            </div>
-          </td></tr>
-          <tr><td style="background:#f8fafc;padding:20px;text-align:center;border-top:1px solid #e2e8f0;">
-            <p style="color:#64748b;font-size:12px;margin:0;margin-bottom:8px;">You're receiving this because of your NexLearn notification preferences.</p>
-            <p style="color:#94a3b8;font-size:11px;margin:0;">© ${new Date().getFullYear()} NexLearn AI. All rights reserved.</p>
-          </td></tr>
-        </table>
-      </body></html>
-    `,
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 8. Certificate of Achievement Email
+// --------------------------------------------------------------------------
 export async function sendCertificateEmail(
   email: string,
   userName: string,
@@ -560,6 +587,9 @@ export async function sendCertificateEmail(
   certUrl: string,
   pdfBase64: string | null = null
 ) {
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const finalCertUrl = certUrl || `${baseUrl}/certificate/${certId}`;
+
   const attachments: MailAttachment[] = [];
   if (pdfBase64) {
     console.log(`[Mailer] Attaching certificate PDF: ${pdfBase64.length} chars`);
@@ -571,55 +601,73 @@ export async function sendCertificateEmail(
     });
   }
 
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Verified Credential',
+    badgeBg: '#ECFDF5',
+    badgeColor: '#059669',
+    badgeBorder: '#A7F3D0',
+    icon: '🏆',
+    iconBg: 'linear-gradient(135deg, #FEF3C7 0%, #ECFDF5 100%)',
+    iconBorder: '#FDE68A',
+    title: 'Congratulations, Graduate!',
+    subtitle: 'Official Academic Certificate of Mastery Awarded',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello <strong>${userName}</strong>,</p>
+      <p>Sensational achievement! You have officially conquered all curriculum modules, passed every adaptive quiz assessment, and mastered the material for:</p>
+      
+      <!-- Diploma Showcase Card -->
+      <div style="background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%); border-radius: 20px; padding: 28px; text-align: center; margin: 28px 0; color: #FFFFFF; box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: #A5B4FC; margin-bottom: 8px;">
+          Certificate of Completion
+        </div>
+        <h2 style="font-size: 22px; font-weight: 800; color: #FFFFFF; margin: 0 0 16px; letter-spacing: -0.02em;">
+          ${courseTitle}
+        </h2>
+        <div style="display: inline-block; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 6px 16px;">
+          <span style="font-size: 11px; color: #E2E8F0; text-transform: uppercase; letter-spacing: 0.08em;">ID: </span>
+          <span style="font-family: monospace; font-weight: 700; color: #38BDF8; font-size: 13px;">${certId}</span>
+        </div>
+        <div style="margin-top: 16px; font-size: 12px; color: #10B981; font-weight: 600;">
+          ✓ Cryptographically Signed &bull; Publicly Verifiable
+        </div>
+      </div>
+
+      ${renderAlertBox('Official Attachment Included', 'A high-resolution, print-ready PDF certificate is attached to this email. You can also view, share on LinkedIn, or download it online anytime.', 'success')}
+
+      <p style="color: #64748B; font-size: 14px; line-height: 1.6;">
+        Add this credential to your resume and professional portfolio to showcase your expertise in <strong>${courseTitle}</strong>.
+      </p>
+    `,
+    ctaText: 'View & Verify Certificate Online',
+    ctaUrl: finalCertUrl,
+    footerExtra: 'This certificate remains permanently valid and verifiable in the NexLearn Global Ledger.',
+  });
+
   return await sendMailMessage({
     to: email,
     toName: userName,
     senderName: 'NexLearn Certificates',
     subject: `🎓 Congratulations! Your Certificate for ${courseTitle}`,
     attachments,
-    html: `
-      <!DOCTYPE html><html>
-      <head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-      <body style="font-family:'Inter',-apple-system,sans-serif;background:#f1f5f9;margin:0;padding:40px 16px;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:520px;background:#ffffff;border-radius:24px;box-shadow:0 12px 32px rgba(15,23,42,0.06);overflow:hidden;border:1px solid #e2e8f0;">
-          <tr><td style="height:6px;background:linear-gradient(90deg,#4f46e5,#8b5cf6,#ec4899);"></td></tr>
-          <tr><td style="padding:48px 40px;">
-            <div style="text-align:center;margin-bottom:28px;">
-              <div style="background:#f5f3ff;width:64px;height:64px;border-radius:18px;display:inline-block;text-align:center;line-height:64px;font-size:28px;border:1px solid #ddd6fe;">🎓</div>
-            </div>
-            <h1 style="font-size:24px;font-weight:800;color:#0f172a;margin:0 0 4px;text-align:center;">Course Completed!</h1>
-            <p style="color:#64748b;font-size:13px;margin:0 0 28px;text-align:center;text-transform:uppercase;letter-spacing:0.06em;">Official Certificate of Achievement</p>
-            
-            <p style="color:#334155;font-size:16px;line-height:1.6;margin-bottom:20px;">Hello <strong>${userName}</strong>,</p>
-            <p style="color:#334155;font-size:16px;line-height:1.6;margin-bottom:24px;">Incredible work! You have officially conquered all modules and quizzes for <strong>${courseTitle}</strong>. Your persistence and dedication have earned you this professional certification.</p>
-            
-            <div style="background:#f8fafc;border-radius:16px;padding:24px;text-align:center;margin-bottom:32px;border:1px solid #e2e8f0;">
-              <p style="color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;margin:0 0 12px;">Certificate ID</p>
-              <div style="font-size:20px;font-weight:800;color:#4f46e5;letter-spacing:1px;font-family:monospace;">${certId}</div>
-            </div>
-            
-            <p style="color:#94a3b8;font-size:13px;line-height:1.6;margin-top:40px;text-align:center;">This certificate remains valid and can be verified through the NexLearn platform at any time.</p>
-          </td></tr>
-          <tr><td style="background:#f8fafc;padding:24px;text-align:center;border-top:1px solid #e2e8f0;">
-            <p style="color:#64748b;font-size:12px;margin:0;">© ${new Date().getFullYear()} NexLearn Platform. All rights reserved.</p>
-          </td></tr>
-        </table>
-      </body></html>
-    `,
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 9. Learning Analytics & Progress Scorecard
+// --------------------------------------------------------------------------
 export async function sendAnalyticsReportEmail(
   email: string,
   userName: string,
   stats: { avgScore: number | string; completedModules: number | string; points: number | string; [key: string]: any },
   pdfBase64: string | null = null
 ) {
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
   const attachments: MailAttachment[] = [];
   if (pdfBase64) {
     console.log(`[Mailer] Attaching analytics report PDF: ${pdfBase64.length} chars`);
     attachments.push({
-      filename: `NexLearn_Official_Report_${new Date().getFullYear()}.pdf`,
+      filename: `NexLearn_Performance_Report_${new Date().getFullYear()}.pdf`,
       content: pdfBase64,
       encoding: 'base64',
       contentType: 'application/pdf',
@@ -628,111 +676,173 @@ export async function sendAnalyticsReportEmail(
 
   const avgNum = typeof stats.avgScore === 'number' ? stats.avgScore : parseFloat(String(stats.avgScore)) || 0;
 
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Performance Scorecard',
+    badgeBg: '#F0F9FF',
+    badgeColor: '#0284C7',
+    badgeBorder: '#BAE6FD',
+    icon: '📊',
+    title: 'Your Learning Intelligence Report',
+    subtitle: 'Comprehensive analysis of your study habits and mastery rate',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello <strong>${userName}</strong>,</p>
+      <p>Here is your personalized performance breakdown. NexLearn's cognitive engine tracks retention, module completions, and quiz accuracy in real time.</p>
+      
+      <!-- 3-Metric KPI Grid -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin: 28px 0;">
+        <tr>
+          <!-- KPI 1: Avg Score -->
+          <td width="33%" style="padding: 6px;">
+            <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px 12px; text-align: center;">
+              <div style="font-size: 11px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;">
+                Quiz Accuracy
+              </div>
+              <div style="font-size: 26px; font-weight: 800; color: #10B981; letter-spacing: -0.02em;">
+                ${stats.avgScore}%
+              </div>
+              <div style="font-size: 11px; color: #059669; font-weight: 600; margin-top: 4px;">
+                ${avgNum >= 80 ? '⭐ Elite' : '📈 On Track'}
+              </div>
+            </div>
+          </td>
+
+          <!-- KPI 2: Modules Completed -->
+          <td width="33%" style="padding: 6px;">
+            <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px 12px; text-align: center;">
+              <div style="font-size: 11px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;">
+                Modules Done
+              </div>
+              <div style="font-size: 26px; font-weight: 800; color: #3B82F6; letter-spacing: -0.02em;">
+                ${stats.completedModules}
+              </div>
+              <div style="font-size: 11px; color: #2563EB; font-weight: 600; margin-top: 4px;">
+                Conquered
+              </div>
+            </div>
+          </td>
+
+          <!-- KPI 3: Points -->
+          <td width="33%" style="padding: 6px;">
+            <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px 12px; text-align: center;">
+              <div style="font-size: 11px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;">
+                XP Earned
+              </div>
+              <div style="font-size: 26px; font-weight: 800; color: #8B5CF6; letter-spacing: -0.02em;">
+                ${stats.points}
+              </div>
+              <div style="font-size: 11px; color: #7C3AED; font-weight: 600; margin-top: 4px;">
+                Total XP
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      ${renderAlertBox(
+        'AI Mentor Assessment',
+        avgNum > 80
+          ? 'You are exhibiting mastery across your technical courses! To accelerate your progress further, explore intermediate and advanced subject branches.'
+          : 'Consistent daily reviews yield maximum retention. Spend 15 minutes revisiting spaced-repetition flashcards to push your accuracy above 85%.',
+        'info'
+      )}
+    `,
+    ctaText: 'View Detailed Radar Analytics',
+    ctaUrl: `${baseUrl}/reports`,
+  });
+
   return await sendMailMessage({
     to: email,
     toName: userName,
     senderName: 'NexLearn Insights',
     subject: `📊 Your Learning Analytics & Progress Report`,
     attachments,
-    html: `
-      <!DOCTYPE html><html>
-      <head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-      <body style="font-family:'Inter',-apple-system,sans-serif;background:#f1f5f9;margin:0;padding:40px 16px;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:560px;background:#ffffff;border-radius:24px;box-shadow:0 12px 32px rgba(15,23,42,0.06);overflow:hidden;border:1px solid #e2e8f0;">
-          <tr><td style="height:6px;background:linear-gradient(90deg,#10b981,#3b82f6,#6366f1);"></td></tr>
-          <tr><td style="padding:48px 40px;">
-            <div style="text-align:center;margin-bottom:28px;">
-              <div style="background:#f0f9ff;width:64px;height:64px;border-radius:18px;display:inline-block;text-align:center;line-height:64px;font-size:28px;border:1px solid #bae6fd;">📈</div>
-            </div>
-            <h1 style="font-size:22px;font-weight:800;color:#0f172a;margin:0 0 4px;text-align:center;">Learning Analytics Report</h1>
-            <p style="color:#64748b;font-size:13px;margin:0 0 32px;text-align:center;text-transform:uppercase;letter-spacing:0.06em;">NexLearn Insights</p>
-            
-            <p style="color:#334155;font-size:15px;line-height:1.6;margin-bottom:24px;">Hello <strong>${userName}</strong>, here is a detailed breakdown of your academic progress and engagement on NexLearn.</p>
-            
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
-              <tr>
-                <td width="50%" style="padding:10px;">
-                  <div style="background:#f8fafc;padding:20px;border-radius:16px;text-align:center;border:1px solid #e2e8f0;">
-                    <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:8px;">Average Score</div>
-                    <div style="font-size:24px;font-weight:800;color:#10b981;">${stats.avgScore}%</div>
-                  </div>
-                </td>
-                <td width="50%" style="padding:10px;">
-                  <div style="background:#f8fafc;padding:20px;border-radius:16px;text-align:center;border:1px solid #e2e8f0;">
-                    <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:8px;">Modules Done</div>
-                    <div style="font-size:24px;font-weight:800;color:#3b82f6;">${stats.completedModules}</div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td width="100%" colspan="2" style="padding:10px;">
-                  <div style="background:#f8fafc;padding:20px;border-radius:16px;text-align:center;border:1px solid #e2e8f0;">
-                    <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;margin-bottom:8px;">Total Points Earned</div>
-                    <div style="font-size:24px;font-weight:800;color:#4f46e5;">${stats.points}</div>
-                  </div>
-                </td>
-              </tr>
-            </table>
-
-            <div style="background:#f0fdf4;border-left:4px solid #10b981;padding:16px 20px;border-radius:4px 8px 8px 4px;margin-bottom:32px;">
-              <p style="margin:0;color:#065f46;font-size:14px;font-weight:500;line-height:1.5;"><strong>Expert Analysis:</strong> You are performing <strong>${avgNum > 80 ? 'exceptionally well' : 'stably'}</strong>. To further accelerate your learning, we recommend exploring more advanced subject categories.</p>
-            </div>
-          </td></tr>
-          <tr><td style="background:#f8fafc;padding:24px;text-align:center;border-top:1px solid #e2e8f0;">
-            <p style="color:#64748b;font-size:11px;margin:0;">This report is automatically generated based on your platform activity. © ${new Date().getFullYear()} NexLearn AI.</p>
-          </td></tr>
-        </table>
-      </body></html>
-    `,
+    html,
   });
 }
 
+// --------------------------------------------------------------------------
+// 10. Welcome & Onboarding Journey Email
+// --------------------------------------------------------------------------
 export async function sendWelcomeEmail(email: string, userName: string) {
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+
+  const html = renderSaaSEmailLayout({
+    badgeText: 'Welcome Aboard',
+    badgeBg: '#EEF2FF',
+    badgeColor: '#4F46E5',
+    icon: '🚀',
+    title: `Welcome to NexLearn, ${userName}!`,
+    subtitle: 'Your AI-accelerated journey to subject mastery begins today',
+    bodyHtml: `
+      <p style="margin-top: 0;">Hello <strong>${userName}</strong>,</p>
+      <p>We are delighted to welcome you to the community. NexLearn is not another static video library — it is an intelligent, autonomous learning ecosystem that synthesizes deep curriculums on any technical subject in seconds.</p>
+
+      <!-- 3 Quickstart Feature Cards -->
+      <div style="margin: 28px 0;">
+        
+        <!-- Card 1 -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; margin-bottom: 12px; padding: 16px;">
+          <tr>
+            <td width="48" style="vertical-align: top; text-align: center; font-size: 24px; padding-right: 12px;">
+              🤖
+            </td>
+            <td>
+              <div style="font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 2px;">
+                Autonomous AI Course Generation
+              </div>
+              <div style="font-size: 13px; color: #64748B; line-height: 1.5;">
+                Enter any topic or framework, and receive structured modules, theory notes, and code snippets in 15 seconds.
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Card 2 -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; margin-bottom: 12px; padding: 16px;">
+          <tr>
+            <td width="48" style="vertical-align: top; text-align: center; font-size: 24px; padding-right: 12px;">
+              🧠
+            </td>
+            <td>
+              <div style="font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 2px;">
+                Spaced Repetition &amp; Mind Maps
+              </div>
+              <div style="font-size: 13px; color: #64748B; line-height: 1.5;">
+                Retain concepts forever with automated memory decay tracking and interactive knowledge graphs.
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Card 3 -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 16px;">
+          <tr>
+            <td width="48" style="vertical-align: top; text-align: center; font-size: 24px; padding-right: 12px;">
+              🎓
+            </td>
+            <td>
+              <div style="font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 2px;">
+                Verifiable Certificates
+              </div>
+              <div style="font-size: 13px; color: #64748B; line-height: 1.5;">
+                Graduate from courses by completing adaptive quizzes, and earn shareable, PDF-backed credentials.
+              </div>
+            </td>
+          </tr>
+        </table>
+
+      </div>
+
+      ${renderAlertBox('Ready to Begin?', 'Type in any topic you wish to master today—Next.js 15, Rust, Docker, or Machine Learning—and generate your first custom syllabus.', 'success')}
+    `,
+    ctaText: 'Synthesize Your First Course',
+    ctaUrl: `${baseUrl}/generate`,
+  });
+
   return await sendMailMessage({
     to: email,
     toName: userName,
-    subject: '🎓 Welcome to your NexLearn Journey!',
-    html: `
-      <!DOCTYPE html><html>
-      <head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-      <body style="font-family:'Inter',-apple-system,sans-serif;background:#f8fafc;margin:0;padding:40px 16px;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;background:#ffffff;border-radius:24px;box-shadow:0 20px 48px rgba(15,23,42,0.08);overflow:hidden;border:1px solid #e2e8f0;">
-          <tr><td style="height:8px;background:linear-gradient(90deg,#4f46e5,#8b5cf6,#ec4899);"></td></tr>
-          <tr><td style="padding:56px 48px;">
-            <div style="text-align:center;margin-bottom:32px;">
-              <div style="background:#eef2ff;width:72px;height:72px;border-radius:22px;display:inline-block;text-align:center;line-height:72px;font-size:36px;border:1px solid #e0e7ff;">🚀</div>
-            </div>
-            
-            <h1 style="font-size:28px;font-weight:800;color:#0f172a;margin:0 0 8px;text-align:center;letter-spacing:-0.02em;">Welcome to NexLearn, ${userName}!</h1>
-            <p style="color:#64748b;font-size:15px;margin:0 0 40px;text-align:center;font-weight:500;">Your AI-accelerated journey to mastery begins today.</p>
-            
-            <div style="color:#334155;font-size:16px;line-height:1.7;margin-bottom:40px;">
-              <p>We're thrilled to have you here. NexLearn is more than just a course platform — it's an intelligent learning environment designed to help you analyze your progress and achieve professional-grade results.</p>
-              
-              <div style="margin-top:32px;background:#f1f5f9;border-radius:20px;padding:24px;">
-                <h3 style="margin:0 0 16px;font-size:14px;color:#4f46e5;text-transform:uppercase;letter-spacing:0.1em;border-bottom:1px solid #e2e8f0;padding-bottom:12px;">Where to start?</h3>
-                <table width="100%">
-                  <tr>
-                    <td width="40" valign="top" style="font-size:20px;padding-top:4px;">📚</td>
-                    <td style="padding-bottom:16px;"><strong>Course Library</strong><br/><span style="font-size:13px;color:#64748b;">Browse professional courses across diverse categories.</span></td>
-                  </tr>
-                  <tr>
-                    <td width="40" valign="top" style="font-size:20px;padding-top:4px;">🛤️</td>
-                    <td style="padding-bottom:16px;"><strong>Dynamic Study Path</strong><br/><span style="font-size:13px;color:#64748b;">Follow a structured roadmap tailored to your goals.</span></td>
-                  </tr>
-                  <tr>
-                    <td width="40" valign="top" style="font-size:20px;padding-top:4px;">🏆</td>
-                    <td><strong>Achievement System</strong><br/><span style="font-size:13px;color:#64748b;">Unlock professional badges as you master new skills.</span></td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </td></tr>
-          <tr><td style="background:#f8fafc;padding:32px;text-align:center;border-top:1px solid #e2e8f0;">
-            <p style="color:#94a3b8;font-size:12px;margin:0;">© ${new Date().getFullYear()} NexLearn AI. All rights reserved.</p>
-          </td></tr>
-        </table>
-      </body></html>
-    `,
+    subject: '🚀 Welcome to NexLearn AI — Let’s Start Learning',
+    html,
   });
 }
