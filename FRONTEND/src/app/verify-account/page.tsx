@@ -10,6 +10,7 @@ function VerifyAccountContent() {
   const email = searchParams.get('email');
   const userId = searchParams.get('userId');
   const token = searchParams.get('token');
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -69,14 +70,14 @@ function VerifyAccountContent() {
         redirect: false,
         userId: data.userId,
         bypassToken: data.bypassToken,
-        callbackUrl: '/dashboard',
+        callbackUrl: callbackUrl,
       });
 
       if (result?.error) {
         setError('Login failed after verification. Please sign in manually.');
         setLoading(false);
       } else {
-        router.push('/dashboard');
+        router.push(callbackUrl);
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
@@ -117,13 +118,13 @@ function VerifyAccountContent() {
       redirect: false,
       userId: userId,
       bypassToken: token,
-      callbackUrl: '/dashboard',
+      callbackUrl: callbackUrl,
     });
 
     if (result?.error) {
       router.push('/login?message=Could not log in. Please sign in manually.');
     } else {
-      router.push('/dashboard');
+      router.push(callbackUrl);
     }
   };
 

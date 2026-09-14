@@ -1,7 +1,11 @@
 'use client';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function HeroSection() {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
+
   return (
     <section className="lp-hero">
       {/* Top Shimmer Badge */}
@@ -26,8 +30,11 @@ export default function HeroSection() {
 
       {/* Hero Buttons */}
       <div className="lp-hero-actions">
-        <Link href="/register" className="lp-btn lp-btn-primary lp-btn-lg">
-          <span>Start Learning Free</span>
+        <Link 
+          href={isAuthenticated ? "/dashboard" : "/register"} 
+          className="lp-btn lp-btn-primary lp-btn-lg"
+        >
+          <span>{isAuthenticated ? 'Go to Dashboard' : 'Start Learning Free'}</span>
           <span style={{ fontSize: '1.2rem', transition: 'transform 0.2s ease' }}>→</span>
         </Link>
         <a href="#simulator" className="lp-btn lp-btn-outline lp-btn-lg">

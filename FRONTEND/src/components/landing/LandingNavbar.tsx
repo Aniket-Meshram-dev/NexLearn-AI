@@ -3,8 +3,11 @@ import Link from 'next/link';
 import { useTheme } from '../ThemeProvider';
 import NexLearnLogo from '../NexLearnLogo';
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 export default function LandingNavbar() {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
   const { theme, setTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -72,14 +75,23 @@ export default function LandingNavbar() {
             {theme === 'dark' ? '☀️' : '🌙'}
           </button>
 
-          <Link href="/login" className="lp-btn lp-btn-ghost desktop-only">
-            Sign In
-          </Link>
+          {isAuthenticated ? (
+            <Link href="/dashboard" className="lp-btn lp-btn-primary">
+              <span>Dashboard</span>
+              <span style={{ fontSize: '1.1rem' }}>→</span>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="lp-btn lp-btn-ghost desktop-only">
+                Sign In
+              </Link>
 
-          <Link href="/register" className="lp-btn lp-btn-primary">
-            <span>Get Started</span>
-            <span style={{ fontSize: '1.1rem' }}>→</span>
-          </Link>
+              <Link href="/register" className="lp-btn lp-btn-primary">
+                <span>Get Started</span>
+                <span style={{ fontSize: '1.1rem' }}>→</span>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

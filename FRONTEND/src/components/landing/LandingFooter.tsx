@@ -1,8 +1,12 @@
 'use client';
 import Link from 'next/link';
 import NexLearnLogo from '../NexLearnLogo';
+import { useSession } from 'next-auth/react';
 
 export default function LandingFooter() {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
+
   return (
     <footer className="lp-footer">
       <div className="lp-footer-content">
@@ -36,13 +40,17 @@ export default function LandingFooter() {
               <Link href="/discover">Course Catalog</Link>
             </li>
             <li>
-              <Link href="/generate">AI Course Generator</Link>
+              <Link href={isAuthenticated ? "/generate" : "/register?callbackUrl=%2Fgenerate"}>
+                AI Course Generator
+              </Link>
             </li>
             <li>
               <a href="#simulator">Interactive Demo</a>
             </li>
             <li>
-              <Link href="/dashboard">Student Workspace</Link>
+              <Link href={isAuthenticated ? "/dashboard" : "/login?callbackUrl=%2Fdashboard"}>
+                Student Workspace
+              </Link>
             </li>
           </ul>
         </div>

@@ -1,15 +1,26 @@
 'use client';
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import NexLearnLogo from '@/components/NexLearnLogo';
 
-export default function RegisterPage() {
+function RegisterContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '', learningGoal: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // If already authenticated, redirect immediately to intended destination
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push(callbackUrl);
+    }
+  }, [status, callbackUrl, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,8 +56,10 @@ export default function RegisterPage() {
         return;
       }
 
-      // Instead of auto sign in, redirect to verification page with bypass token
-      router.push(`/verify-account?email=${encodeURIComponent(form.email)}&userId=${data.userId}&token=${data.bypassToken}`);
+      // Redirect to verification page with bypass token and preserve callbackUrl
+      router.push(
+        `/verify-account?email=${encodeURIComponent(form.email)}&userId=${data.userId}&token=${data.bypassToken}&callbackUrl=${encodeURIComponent(callbackUrl)}`
+      );
     } catch (err) {
       setError('Something went wrong. Please try again.');
       setLoading(false);
@@ -64,7 +77,7 @@ export default function RegisterPage() {
 
         <button 
           type="button"
-          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+          onClick={() => signIn('google', { callbackUrl })}
           className="btn btn-google" 
           style={{ width: '100%', marginBottom: 12 }}
         >
@@ -165,9 +178,20 @@ export default function RegisterPage() {
         </form>
 
         <p className="auth-footer">
-          Already have an account? <Link href="/login">Sign in</Link>
+          Already have an account?{' '}
+          <Link href={callbackUrl !== '/dashboard' ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}` : '/login'}>
+            Sign in
+          </Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="loading-page"><div className="spinner" /></div>}>
+      <RegisterContent />
+    </Suspense>
   );
 }

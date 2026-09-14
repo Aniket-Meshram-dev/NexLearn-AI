@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 function GenerateContent() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [form, setForm] = useState({
@@ -15,6 +15,13 @@ function GenerateContent() {
   const [error, setError] = useState('');
   const [preview, setPreview] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      const currentUrl = typeof window !== 'undefined' ? window.location.pathname + window.location.search : '/generate';
+      router.push(`/register?callbackUrl=${encodeURIComponent(currentUrl)}`);
+    }
+  }, [status, router]);
 
   useEffect(() => {
     const topicParam = searchParams.get('topic');

@@ -1,16 +1,27 @@
 'use client';
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import NexLearnLogo from '@/components/NexLearnLogo';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
   const [form, setForm] = useState({ email: '', password: '', otp: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [requireOTP, setRequireOTP] = useState(false);
+
+  // If already authenticated, redirect immediately to intended destination
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push(callbackUrl);
+    }
+  }, [status, callbackUrl, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,21 +32,18 @@ export default function LoginPage() {
       redirect: false,
       email: form.email,
       password: form.password,
-    }
+    };
     if (form.otp?.trim()) {
-      signPayload.otp = form.otp.trim()
+      signPayload.otp = form.otp.trim();
     }
 
     const result = await signIn('credentials', signPayload);
-
-    console.log("Sign-in result:", result);
 
     if (result?.error) {
       if (result.error.includes('2FA_REQUIRED')) {
         setRequireOTP(true);
         setError('');
       } else {
-        // Map common errors or show provided one
         setError(result.error);
         if (result.error.includes('OTP')) {
           setRequireOTP(true);
@@ -43,11 +51,10 @@ export default function LoginPage() {
       }
       setLoading(false);
     } else {
-      // If the server-side callback returned a specific redirect (Verify/2FA), follow it
       if (result?.url && !result.url.includes('/login')) {
         router.push(result.url);
       } else {
-        router.push('/dashboard');
+        router.push(callbackUrl);
       }
     }
   };
@@ -63,7 +70,7 @@ export default function LoginPage() {
 
         <button 
           type="button"
-          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+          onClick={() => signIn('google', { callbackUrl })}
           className="btn btn-google" 
           style={{ width: '100%', marginBottom: 12 }}
         >
@@ -138,9 +145,20 @@ export default function LoginPage() {
         </form>
 
         <p className="auth-footer">
-          Don&apos;t have an account? <Link href="/register">Create one</Link>
+          Don&apos;t have an account?{' '}
+          <Link href={callbackUrl !== '/dashboard' ? `/register?callbackUrl=${encodeURIComponent(callbackUrl)}` : '/register'}>
+            Create one
+          </Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="loading-page"><div className="spinner" /></div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

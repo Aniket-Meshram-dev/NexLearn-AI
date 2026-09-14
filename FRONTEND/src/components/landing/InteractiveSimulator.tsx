@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 interface TopicData {
   title: string;
@@ -130,11 +131,17 @@ await producer.send({
 };
 
 export default function InteractiveSimulator() {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
   const [selectedTopic, setSelectedTopic] = useState('Full-Stack Next.js 15');
   const [activeTab, setActiveTab] = useState<'syllabus' | 'quiz' | 'mentor' | 'mindmap'>('syllabus');
   const [selectedQuizAnswer, setSelectedQuizAnswer] = useState<number | null>(null);
 
   const current = PRESET_TOPICS[selectedTopic];
+  const courseUrl = `/generate?topic=${encodeURIComponent(selectedTopic)}`;
+  const launchHref = isAuthenticated 
+    ? courseUrl 
+    : `/register?callbackUrl=${encodeURIComponent(courseUrl)}`;
 
   const handleTopicChange = (topic: string) => {
     setSelectedTopic(topic);
@@ -201,7 +208,7 @@ export default function InteractiveSimulator() {
               </div>
 
               <Link
-                href={`/generate?topic=${encodeURIComponent(selectedTopic)}`}
+                href={launchHref}
                 className="lp-btn lp-btn-primary"
                 style={{ padding: '8px 18px', fontSize: '0.85rem' }}
               >

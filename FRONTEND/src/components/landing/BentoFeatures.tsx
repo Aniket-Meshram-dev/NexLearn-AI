@@ -1,7 +1,11 @@
 'use client';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function BentoFeatures() {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
+
   return (
     <section id="features" className="lp-section">
       <div className="lp-section-header">
@@ -207,8 +211,11 @@ export default function BentoFeatures() {
               </p>
             </div>
 
-            <Link href="/register" className="lp-btn lp-btn-primary lp-btn-lg">
-              <span>Experience It Yourself</span>
+            <Link 
+              href={isAuthenticated ? "/dashboard" : "/register"} 
+              className="lp-btn lp-btn-primary lp-btn-lg"
+            >
+              <span>{isAuthenticated ? 'Open Dashboard' : 'Experience It Yourself'}</span>
               <span>→</span>
             </Link>
           </div>

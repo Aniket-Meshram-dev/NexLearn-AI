@@ -1,7 +1,11 @@
 'use client';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function CtaBanner() {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
+
   return (
     <section className="lp-cta-wrapper">
       <div className="lp-cta-box">
@@ -28,15 +32,27 @@ export default function CtaBanner() {
           No credit card required.
         </p>
 
-        <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/register" className="lp-btn lp-btn-primary lp-btn-lg">
-            <span>Create Your Free Account</span>
-            <span style={{ fontSize: '1.2rem' }}>→</span>
-          </Link>
-          <Link href="/login" className="lp-btn lp-btn-outline lp-btn-lg">
-            <span>Sign In to Existing Workspace</span>
-          </Link>
-        </div>
+        {isAuthenticated ? (
+          <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/dashboard" className="lp-btn lp-btn-primary lp-btn-lg">
+              <span>Go to Workspace Dashboard</span>
+              <span style={{ fontSize: '1.2rem' }}>→</span>
+            </Link>
+            <Link href="/discover" className="lp-btn lp-btn-outline lp-btn-lg">
+              <span>Explore Course Catalog</span>
+            </Link>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/register" className="lp-btn lp-btn-primary lp-btn-lg">
+              <span>Create Your Free Account</span>
+              <span style={{ fontSize: '1.2rem' }}>→</span>
+            </Link>
+            <Link href="/login" className="lp-btn lp-btn-outline lp-btn-lg">
+              <span>Sign In to Existing Workspace</span>
+            </Link>
+          </div>
+        )}
 
         <div
           style={{
