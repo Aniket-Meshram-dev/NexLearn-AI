@@ -65,12 +65,12 @@ NexLearn/
 │   │   │   ├── user/               # Profile, stats, bookmarks, notifications, security
 │   │   │   └── videos/             # YouTube video recommendations search
 │   │   └── lib/                    # Core backend libraries & services
-│   │       ├── auth.js             # NextAuth options, credentials & Google provider
-│   │       ├── gemini.js           # Groq & Google Gemini AI generation pipelines
-│   │       ├── mailer.js           # Nodemailer SMTP transactional email service
-│   │       └── prisma.js           # Prisma client singleton
+│   │       ├── auth.ts             # NextAuth options, credentials & Google provider
+│   │       ├── gemini.ts           # Groq & Google Gemini AI generation pipelines
+│   │       ├── mailer.ts           # Brevo (Sendinblue) transactional email service
+│   │       └── prisma.ts           # Prisma client singleton
 │   ├── next.config.mjs             # Backend server configuration
-│   ├── jsconfig.json               # Path aliases (@/* -> ./src/*)
+│   ├── tsconfig.json               # TypeScript path aliases (@/* -> ./src/*)
 │   ├── .env.example                # Example backend environment variables
 │   └── package.json                # Backend dependencies & scripts
 │
@@ -115,12 +115,10 @@ NEXTAUTH_SECRET="your_random_32_char_secret"
 GROQ_API_KEY="gsk_..."
 GOOGLE_GENERATIVE_AI_API_KEY="..."
 
-# Email (SMTP) Configuration
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT="587"
-SMTP_SECURE="false"
-SMTP_USER="your-email@gmail.com"
-SMTP_PASS="your-gmail-app-password"
+# Brevo (Sendinblue) Email Service
+BREVO_API_KEY="xkeysib-..."
+BREVO_SENDER_EMAIL="your-verified-email@domain.com"
+BREVO_SENDER_NAME="NexLearn"
 
 # Google Authentication
 GOOGLE_CLIENT_ID="142499239480-..."

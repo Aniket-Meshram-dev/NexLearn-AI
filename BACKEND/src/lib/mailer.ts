@@ -1,15 +1,3 @@
-import nodemailer from 'nodemailer';
-
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
 interface MailAttachment {
   filename: string;
   content: string; // base64 string
@@ -27,8 +15,7 @@ interface SendMailOptions {
 }
 
 /**
- * Sends transactional email prioritizing Brevo (Sendinblue) HTTP API
- * with automatic fallback to Nodemailer SMTP.
+ * Sends transactional email exclusively using Brevo (Sendinblue) v3 REST API.
  */
 async function sendMailMessage({
   to,
@@ -39,72 +26,59 @@ async function sendMailMessage({
   attachments,
 }: SendMailOptions) {
   const brevoApiKey = process.env.BREVO_API_KEY;
-  const brevoSenderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER || 'noreply@nexlearn.ai';
-  const senderDisplayName = senderName || process.env.BREVO_SENDER_NAME || 'NexLearn AI';
+  const brevoSenderEmail = process.env.BREVO_SENDER_EMAIL;
+  const senderDisplayName = senderName || process.env.BREVO_SENDER_NAME || 'NexLearn';
 
-  // 1. Try sending via Brevo API v3
-  if (brevoApiKey && brevoSenderEmail) {
-    try {
-      const payload: Record<string, any> = {
-        sender: {
-          name: senderDisplayName,
-          email: brevoSenderEmail,
-        },
-        to: [
-          toName ? { email: to, name: toName } : { email: to },
-        ],
-        subject,
-        htmlContent: html,
-      };
-
-      if (attachments && attachments.length > 0) {
-        payload.attachment = attachments.map((att) => ({
-          name: att.filename,
-          content: att.content.replace(/^data:[^;]+;base64,/, ''),
-        }));
-      }
-
-      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'api-key': brevoApiKey,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error('[Brevo Mailer Error]:', res.status, errorText);
-        throw new Error(`Brevo HTTP ${res.status}: ${errorText}`);
-      }
-
-      const data = await res.json();
-      console.log('[Brevo Mailer] Email sent successfully:', data.messageId || 'OK');
-      return data;
-    } catch (err) {
-      console.error('[Brevo Mailer Failed, trying SMTP fallback]:', err);
-    }
+  if (!brevoApiKey || !brevoSenderEmail) {
+    console.error('[Brevo Mailer] Missing BREVO_API_KEY or BREVO_SENDER_EMAIL environment variable. Email aborted for:', to);
+    return null;
   }
 
-  // 2. Fallback to Nodemailer SMTP
-  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-    const mailOptions: Record<string, any> = {
-      from: `"${senderDisplayName}" <${process.env.SMTP_USER}>`,
-      to,
+  try {
+    const payload: Record<string, any> = {
+      sender: {
+        name: senderDisplayName,
+        email: brevoSenderEmail,
+      },
+      to: [
+        toName ? { email: to, name: toName } : { email: to },
+      ],
       subject,
-      html,
+      htmlContent: html,
     };
-    if (attachments && attachments.length > 0) {
-      mailOptions.attachments = attachments;
-    }
-    return await transporter.sendMail(mailOptions);
-  }
 
-  console.warn('[Mailer] Neither Brevo API nor SMTP credentials configured. Email skipped for:', to);
-  return null;
+    if (attachments && attachments.length > 0) {
+      payload.attachment = attachments.map((att) => ({
+        name: att.filename,
+        content: att.content.replace(/^data:[^;]+;base64,/, ''),
+      }));
+    }
+
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'api-key': brevoApiKey,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('[Brevo Mailer Error]:', res.status, errorText);
+      throw new Error(`Brevo HTTP ${res.status}: ${errorText}`);
+    }
+
+    const data = await res.json();
+    console.log('[Brevo Mailer] Email dispatched successfully:', data.messageId || 'OK');
+    return data;
+  } catch (err) {
+    console.error('[Brevo Mailer Exception]:', err);
+    throw err;
+  }
 }
+
 
 export async function sendOTPEmail(email: string, otp: string) {
   return await sendMailMessage({
