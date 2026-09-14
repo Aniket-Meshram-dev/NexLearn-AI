@@ -1,28 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <linearGradient id="fav-mobius-grad-left" x1="12" y1="52" x2="28" y2="12" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#312E81" />
-      <stop offset="40%" stop-color="#4F46E5" />
-      <stop offset="100%" stop-color="#818CF8" />
-    </linearGradient>
-    <linearGradient id="fav-mobius-grad-twist" x1="18" y1="14" x2="46" y2="50" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#8B5CF6" />
-      <stop offset="35%" stop-color="#A855F7" />
-      <stop offset="70%" stop-color="#6366F1" />
+    <linearGradient id="fav-book-grad" x1="10" y1="54" x2="54" y2="10" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="50%" stop-color="#8B5CF6" />
       <stop offset="100%" stop-color="#06B6D4" />
     </linearGradient>
-    <linearGradient id="fav-mobius-grad-right" x1="36" y1="52" x2="54" y2="12" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0284C7" />
-      <stop offset="50%" stop-color="#06B6D4" />
-      <stop offset="90%" stop-color="#38BDF8" />
-      <stop offset="100%" stop-color="#E0F2FE" />
+    <linearGradient id="fav-page-l" x1="10" y1="36" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#818CF8" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+    <linearGradient id="fav-page-r" x1="32" y1="56" x2="54" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="fav-n-diag" x1="20" y1="14" x2="44" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A855F7" />
+      <stop offset="50%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#06B6D4" />
     </linearGradient>
   </defs>
-  <path d="M14 46C11.5 41 12 28 17 18C20.5 11 28 9.5 32 14L23 27C19 23 17 25 16 32C15.2 37.5 17 42 20 44C23.5 46.5 28 44 31 40L28 35C26 38 23 39 21 37C18.5 35 18 30 20 25L27 15C22 11 15 13 11 20C7 27 6.5 42 11 48C13.5 51.5 18 53 22 51L24 45C20.5 47 16 48 14 46Z" fill="url(#fav-mobius-grad-left)" />
-  <path d="M23 13.5C28 9 35 11 38 16L20 42C17 46.5 12 47 8.5 43C5 39 6 31 10 24L16 28C13 33 12 37 14 39C16 41 19 40 21 37L39 12C34 6 25 5 19 10C16 12.5 14 16 13 20L19 22C19.5 18.5 21 15.5 23 13.5Z" fill="url(#fav-mobius-grad-twist)" />
-  <path d="M37 38L45 22C47.5 17 50.5 14 54 16C57 18 57.5 23 56 29C54 37 49 46 42 51C36 55 29 54 26 49L32 45C33.5 48 37 49 41 46C46 42 49.5 35 51 28C52 23 51 20 49 20C47 20 45 22 43 26L35 42C33 46 30 48.5 26 49L24 43C27 43 29 41 31 38L37 26C39 22 41 18 44 15L48 18C45 22 43 27 41 32L37 38Z" fill="url(#fav-mobius-grad-right)" />
-  <circle cx="48" cy="14" r="5" fill="#38BDF8" opacity="0.4" />
-  <circle cx="48" cy="14" r="3" fill="#22D3EE" />
-  <circle cx="48" cy="14" r="1.5" fill="#FFFFFF" />
-  <path d="M48 9L49 13L53 14L49 15L48 19L47 15L43 14L47 13L48 9Z" fill="#FFFFFF" opacity="0.9" />
+
+  <!-- Open Book Base -->
+  <path d="M32 54C22 52 14 54 8 57C7 57.5 6 56.5 6 55.5V47C13 44 22 42 32 45C42 42 51 44 58 47V55.5C58 56.5 57 57.5 56 57C50 54 42 52 32 54Z" fill="#1E1B4B" stroke="url(#fav-book-grad)" stroke-width="1.5" />
+  <!-- Left Page -->
+  <path d="M32 48C23 45 15 47 10 50V43C16 40 24 38 32 41V48Z" fill="url(#fav-page-l)" />
+  <!-- Right Page -->
+  <path d="M32 48C41 45 49 47 54 50V43C48 40 40 38 32 41V48Z" fill="url(#fav-page-r)" />
+  <!-- Spine Notch -->
+  <path d="M32 41V54" stroke="#A855F7" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Rising 'N' Monogram -->
+  <!-- Left Pillar -->
+  <rect x="18" y="14" width="7" height="27" rx="3" fill="#6366F1" />
+  <!-- Diagonal -->
+  <path d="M22 14L42 39.5C42.8 40.5 44 40.2 44 39V16C44 14.9 44.9 14 46 14H46.5C47.3 14 48 14.7 48 15.5V40C48 41.1 47.1 42 46 42H42.5C41.4 42 40.4 41.3 39.8 40.4L20 15C19.5 14.2 20.2 13.5 21 13.8L22 14Z" fill="url(#fav-n-diag)" />
+  <!-- Right Pillar -->
+  <rect x="39" y="14" width="7" height="27" rx="3" fill="#06B6D4" />
+  <!-- Apex Spark -->
+  <circle cx="45" cy="12" r="3.5" fill="#38BDF8" opacity="0.5" />
+  <circle cx="45" cy="12" r="2" fill="#FFFFFF" />
+  <path d="M45 8L46 11L49 12L46 13L45 16L44 13L41 12L44 11L45 8Z" fill="#FFFFFF" opacity="0.9" />
 </svg>

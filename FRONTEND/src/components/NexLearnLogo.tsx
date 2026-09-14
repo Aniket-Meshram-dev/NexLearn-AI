@@ -15,10 +15,10 @@ export default function NexLearnLogo({
   className = '',
 }: NexLearnLogoProps) {
   const dimensions = {
-    sm: { icon: 30, text: '1.1rem', gap: 10, badge: '0.62rem' },
-    md: { icon: 42, text: '1.4rem', gap: 12, badge: '0.68rem' },
-    lg: { icon: 52, text: '1.85rem', gap: 14, badge: '0.75rem' },
-    xl: { icon: 68, text: '2.4rem', gap: 18, badge: '0.85rem' },
+    sm: { icon: 32, text: '1.15rem', gap: 10, badge: '0.62rem' },
+    md: { icon: 44, text: '1.45rem', gap: 12, badge: '0.68rem' },
+    lg: { icon: 56, text: '1.9rem', gap: 14, badge: '0.75rem' },
+    xl: { icon: 72, text: '2.5rem', gap: 18, badge: '0.85rem' },
   }[size];
 
   const content = (
@@ -32,7 +32,7 @@ export default function NexLearnLogo({
         userSelect: 'none',
       }}
     >
-      {/* 3D Möbius Infinity Ribbon "N" SVG Icon */}
+      {/* Open Book + Rising Geometric 'N' SVG Logo */}
       <div
         style={{
           width: dimensions.icon,
@@ -42,8 +42,8 @@ export default function NexLearnLogo({
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
-          filter: 'drop-shadow(0 6px 16px rgba(99, 102, 241, 0.4))',
-          transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          filter: 'drop-shadow(0 4px 14px rgba(99, 102, 241, 0.45))',
+          transition: 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
         }}
         className="nexlearn-logo-icon"
       >
@@ -54,81 +54,129 @@ export default function NexLearnLogo({
           style={{ width: '100%', height: '100%', overflow: 'visible' }}
         >
           <defs>
-            {/* Ribbon Gradient 1: Deep Indigo to Bright Violet */}
-            <linearGradient id="mobius-grad-left" x1="12" y1="52" x2="28" y2="12" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#312E81" />
-              <stop offset="40%" stopColor="#4F46E5" />
-              <stop offset="100%" stopColor="#818CF8" />
-            </linearGradient>
-
-            {/* Ribbon Gradient 2: The Dimensional Crossover Twist */}
-            <linearGradient id="mobius-grad-twist" x1="18" y1="14" x2="46" y2="50" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#8B5CF6" />
-              <stop offset="35%" stopColor="#A855F7" />
-              <stop offset="70%" stopColor="#6366F1" />
+            {/* Primary Neon Gradient (Indigo -> Violet -> Cyan) */}
+            <linearGradient id="book-n-grad-primary" x1="10" y1="54" x2="54" y2="10" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#4F46E5" />
+              <stop offset="50%" stopColor="#8B5CF6" />
               <stop offset="100%" stopColor="#06B6D4" />
             </linearGradient>
 
-            {/* Ribbon Gradient 3: Ascending Energy Pillar & Cyan Apex */}
-            <linearGradient id="mobius-grad-right" x1="36" y1="52" x2="54" y2="12" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#0284C7" />
-              <stop offset="50%" stopColor="#06B6D4" />
-              <stop offset="90%" stopColor="#38BDF8" />
-              <stop offset="100%" stopColor="#E0F2FE" />
+            {/* Left Page Gradient */}
+            <linearGradient id="book-page-left" x1="10" y1="36" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#818CF8" stopOpacity="0.85" />
+              <stop offset="100%" stopColor="#4F46E5" />
             </linearGradient>
 
-            {/* Ambient Shading Shadow for Under-Loop */}
-            <linearGradient id="mobius-shadow-gradient" x1="26" y1="28" x2="38" y2="36" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#000000" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            {/* Right Page Gradient */}
+            <linearGradient id="book-page-right" x1="32" y1="56" x2="54" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#6366F1" />
+              <stop offset="100%" stopColor="#06B6D4" />
             </linearGradient>
 
-            {/* Glowing Aura Filter */}
-            <filter id="logo-glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
+            {/* 'N' Monogram Left Pillar */}
+            <linearGradient id="n-pillar-left" x1="18" y1="38" x2="26" y2="12" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#6366F1" />
+              <stop offset="100%" stopColor="#A855F7" />
+            </linearGradient>
+
+            {/* 'N' Monogram Diagonal Fold */}
+            <linearGradient id="n-diagonal" x1="20" y1="14" x2="44" y2="42" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#A855F7" />
+              <stop offset="50%" stopColor="#6366F1" />
+              <stop offset="100%" stopColor="#06B6D4" />
+            </linearGradient>
+
+            {/* 'N' Monogram Right Pillar */}
+            <linearGradient id="n-pillar-right" x1="38" y1="42" x2="46" y2="12" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#06B6D4" />
+              <stop offset="100%" stopColor="#38BDF8" />
+            </linearGradient>
+
+            {/* Ambient Glow */}
+            <filter id="book-n-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
 
-          {/* Underlay Shadow Path for the Diagonal Fold */}
+          {/* ================= BACKGROUND OPEN BOOK ================= */}
+          {/* Base Spine & Bottom Hardcover Arc */}
           <path
-            d="M24 24L38 42C35 44 31 43 28 39L20 28C22 25 24 24 24 24Z"
-            fill="url(#mobius-shadow-gradient)"
+            d="M32 54C22 52 14 54 8 57C7 57.5 6 56.5 6 55.5V47C13 44 22 42 32 45C42 42 51 44 58 47V55.5C58 56.5 57 57.5 56 57C50 54 42 52 32 54Z"
+            fill="#1E1B4B"
+            stroke="url(#book-n-grad-primary)"
+            strokeWidth="1.5"
           />
 
-          {/* 1. Left Pillar & Bottom Infinity Loop (Ascending) */}
+          {/* Left Open Book Layered Pages */}
           <path
-            d="M14 46C11.5 41 12 28 17 18C20.5 11 28 9.5 32 14L23 27C19 23 17 25 16 32C15.2 37.5 17 42 20 44C23.5 46.5 28 44 31 40L28 35C26 38 23 39 21 37C18.5 35 18 30 20 25L27 15C22 11 15 13 11 20C7 27 6.5 42 11 48C13.5 51.5 18 53 22 51L24 45C20.5 47 16 48 14 46Z"
-            fill="url(#mobius-grad-left)"
-          />
-
-          {/* 2. Continuous Möbius Infinity Diagonal Ribbon Forming 'N' */}
-          <path
-            d="M23 13.5C28 9 35 11 38 16L20 42C17 46.5 12 47 8.5 43C5 39 6 31 10 24L16 28C13 33 12 37 14 39C16 41 19 40 21 37L39 12C34 6 25 5 19 10C16 12.5 14 16 13 20L19 22C19.5 18.5 21 15.5 23 13.5Z"
-            fill="url(#mobius-grad-twist)"
-          />
-
-          {/* 3. Right Pillar & Upward Breakthrough Flow */}
-          <path
-            d="M37 38L45 22C47.5 17 50.5 14 54 16C57 18 57.5 23 56 29C54 37 49 46 42 51C36 55 29 54 26 49L32 45C33.5 48 37 49 41 46C46 42 49.5 35 51 28C52 23 51 20 49 20C47 20 45 22 43 26L35 42C33 46 30 48.5 26 49L24 43C27 43 29 41 31 38L37 26C39 22 41 18 44 15L48 18C45 22 43 27 41 32L37 38Z"
-            fill="url(#mobius-grad-right)"
-          />
-
-          {/* Glowing Neural Node Spark at Top Apex (Knowledge Burst) */}
-          <circle cx="48" cy="14" r="5" fill="#38BDF8" opacity="0.3" filter="url(#logo-glow)" />
-          <circle cx="48" cy="14" r="3" fill="#22D3EE" />
-          <circle cx="48" cy="14" r="1.5" fill="#FFFFFF" />
-
-          {/* Micro-sparkle Star Accent */}
-          <path
-            d="M48 9L49 13L53 14L49 15L48 19L47 15L43 14L47 13L48 9Z"
-            fill="#FFFFFF"
+            d="M32 48C23 45 15 47 10 50V43C16 40 24 38 32 41V48Z"
+            fill="url(#book-page-left)"
             opacity="0.9"
           />
+          <path
+            d="M32 43C24 40 17 41 12 44V38C18 35 25 34 32 37V43Z"
+            fill="#818CF8"
+            opacity="0.4"
+          />
+
+          {/* Right Open Book Layered Pages */}
+          <path
+            d="M32 48C41 45 49 47 54 50V43C48 40 40 38 32 41V48Z"
+            fill="url(#book-page-right)"
+            opacity="0.9"
+          />
+          <path
+            d="M32 43C40 40 47 41 52 44V38C46 35 39 34 32 37V43Z"
+            fill="#38BDF8"
+            opacity="0.4"
+          />
+
+          {/* Spine Center Notch */}
+          <path d="M32 41V54" stroke="#A855F7" strokeWidth="2" strokeLinecap="round" />
+
+          {/* ================= RISING LETTER "N" ================= */}
+          {/* Left Upright Pillar of 'N' */}
+          <path
+            d="M18 16C18 14.8954 18.8954 14 20 14H24C25.1046 14 26 14.8954 26 16V40C26 41.1046 25.1046 42 24 42H20C18.8954 42 18 41.1046 18 40V16Z"
+            fill="url(#n-pillar-left)"
+          />
+
+          {/* Inner Highlight for Left Pillar */}
+          <path
+            d="M20 16H22V39H20V16Z"
+            fill="#FFFFFF"
+            opacity="0.4"
+          />
+
+          {/* Dynamic Diagonal Stroke of 'N' */}
+          <path
+            d="M22 14L42 39.5C42.8 40.5 44 40.2 44 39V16C44 14.8954 44.8954 14 46 14H46.5C47.3 14 48 14.7 48 15.5V40C48 41.1046 47.1046 42 46 42H42.5C41.4 42 40.4 41.3 39.8 40.4L20 15C19.5 14.2 20.2 13.5 21 13.8L22 14Z"
+            fill="url(#n-diagonal)"
+            filter="url(#book-n-glow)"
+          />
+
+          {/* Right Upright Pillar of 'N' */}
+          <path
+            d="M38 16C38 14.8954 38.8954 14 40 14H44C45.1046 14 46 14.8954 46 16V40C46 41.1046 45.1046 42 44 42H40C38.8954 42 38 41.1046 38 40V16Z"
+            fill="url(#n-pillar-right)"
+          />
+
+          {/* Inner Highlight for Right Pillar */}
+          <path
+            d="M42 16H44V39H42V16Z"
+            fill="#FFFFFF"
+            opacity="0.4"
+          />
+
+          {/* Apex Energy Spark / Star at Top-Right of 'N' */}
+          <circle cx="45" cy="12" r="3.5" fill="#38BDF8" opacity="0.4" />
+          <circle cx="45" cy="12" r="2" fill="#FFFFFF" />
+          <path d="M45 8L46 11L49 12L46 13L45 16L44 13L41 12L44 11L45 8Z" fill="#FFFFFF" opacity="0.9" />
         </svg>
       </div>
 
-      {/* Typography Wordmark */}
+      {/* Brand Name Typography */}
       {showText && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span
@@ -145,7 +193,7 @@ export default function NexLearnLogo({
             <span style={{ color: 'var(--lp-text-primary, var(--text))' }}>Nex</span>
             <span
               style={{
-                background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%)',
+                background: 'linear-gradient(135deg, #4F46E5 0%, #8B5CF6 50%, #06B6D4 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 marginLeft: '1px',
