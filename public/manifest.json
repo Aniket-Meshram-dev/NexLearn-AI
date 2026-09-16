@@ -1,0 +1,52 @@
+{
+  "name": "NexLearn AI — Intelligent Learning Ecosystem",
+  "short_name": "NexLearn",
+  "description": "AI-native educational platform that generates structured courses, provides interactive learning, and tracks performance.",
+  "id": "/",
+  "categories": ["education", "productivity"],
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0B0D13",
+  "theme_color": "#4F46E5",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "description": "Open your learning workspace",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Generate Course",
+      "url": "/generate",
+      "description": "Generate a new AI curriculum",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Discover",
+      "url": "/discover",
+      "description": "Browse public community courses",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
