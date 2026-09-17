@@ -534,7 +534,8 @@ NexLearn-AI/
 │   │   ├── 15-user-profile.png         # Student profile & academic preferences
 │   │   └── 16-settings-security.png    # 2FA security vault & session settings
 │   └── videos/                         # High-definition video walkthroughs
-│       └── nexlearn-walkthrough.webm   # 1080p Playwright-recorded end-to-end demo (5.8 MB)
+│       ├── nexlearn-walkthrough.mp4    # 1080p Playwright-recorded full-platform MP4 (42.3 MB)
+│       └── nexlearn-walkthrough.webm   # 1080p Playwright-recorded full-platform WebM (22.5 MB)
 ├── prisma/
 │   └── schema.prisma                   # 12 Prisma models, relations, indexes & enums
 ├── public/                             # Public static assets, brand SVGs, manifest & icons
@@ -558,7 +559,7 @@ NexLearn-AI/
 │   │   │   ├── reports/                # Academic analytics, Chart.js telemetry & PDF export
 │   │   │   ├── achievements/           # Gamification vault & milestone trophy badges
 │   │   │   ├── certificate/[id]/       # Verifiable certificate view & LinkedIn credential
-│   │   │   ├── c/[id]/                 # Public shareable certificate verification link
+│   │   │   ├── c/[id]/                 # Public shareable course preview & 1-click enroll portal
 │   │   │   ├── discover/               # Global course marketplace & community catalog
 │   │   │   ├── profile/                # Scholar bio, career goals & academic preferences
 │   │   │   ├── settings/               # Account security, password reset & 2FA toggles
@@ -702,33 +703,59 @@ erDiagram
 | `POST` | `/api/courses/generate` | Generates a new comprehensive course syllabus using dual LLM cascade | `JWT` | `{ topic, level, hoursPerDay, duration, goal }` | `{ course: { id, title, modules: [...] } }` |
 | `GET` | `/api/courses` | Lists all enrolled & completed courses for the authenticated scholar | `JWT` | None | `{ courses: [...] }` |
 | `GET` | `/api/courses/[id]` | Retrieves full course details, module list, progress & certificate | `JWT` | Dynamic Route `id` | `{ course: { id, title, modules, ... } }` |
-| `POST` | `/api/courses/[id]/enroll` | Enrolls current user into an existing course or community template | `JWT` | None | `{ success: true, courseId }` |
+| `PATCH` | `/api/courses/[id]` | Updates course enrollment status (`enrolled: true/false`) | `JWT` | `{ enrolled: boolean }` | `{ success: true, course }` |
+| `DELETE` | `/api/courses/[id]` | Unenrolls scholar or deletes course from database | `JWT` | Dynamic Route `id` | `{ success: true, message: "..." }` |
 | `GET` | `/api/courses/[id]/modules/[moduleId]` | Fetches full module learning content, theory notes, code & exercises | `JWT` | Dynamic Route `id`, `moduleId` | `{ module: { id, notes, examples, ... } }` |
+| `POST` | `/api/courses/[id]/modules/[moduleId]/enrich` | AI-powered deep enrichment of lesson notes, exercises & examples | `JWT` | `{ expandSectionsOnly?: boolean }` | `{ success: true, module }` |
+| `POST` | `/api/courses/[id]/modules/[moduleId]/audio-summary` | Generates personalized audio briefing podcast script by persona | `JWT` | `{ persona?: "elena" \| "marcus" \| "alex" }` | `{ script: "...", persona, keyTakeaways: [...] }` |
 | `POST` | `/api/courses/[id]/modules/[moduleId]/mindmap` | Generates or regenerates an interactive concept mindmap graph | `JWT` | None | `{ mindmap: "{ id, label, children: [...] }" }` |
 
-### 🤖 AI Mentor & Multi-Model Streaming
+### 🤖 AI Mentor, Multi-Model Chat & Media
 
 | Method | Endpoint | Description | Auth | Request Body / Query | Success Response |
 |---|---|---|:---:|---|---|
-| `POST` | `/api/ai/mentor` | Conversational streaming Socratic guidance grounded in module context | `JWT` | `{ message, persona, courseTitle, moduleNotes }` | Streaming text / SSE chunks |
-| `GET` | `/api/videos` | Academic YouTube video recommendations tailored to current subtopic | `JWT` | `?query=Topic+Name` | `{ videos: [{ id, title, thumbnail, ... }] }` |
+| `POST` | `/api/ai/chat` | Conversational Socratic guidance grounded in active module context | `JWT` | `{ message, moduleId, courseId, currentPage, history }` | `{ response: "...", persona }` |
+| `GET` | `/api/videos/search` | Academic YouTube video recommendations tailored to subtopics | `JWT` | `?q=Topic+Name` | `{ videos: [{ videoId, title, thumbnail, timestamp, author }] }` |
 
-### 🧠 Spaced Repetition (SM-2) & Quizzes
-
-| Method | Endpoint | Description | Auth | Request Body / Query | Success Response |
-|---|---|---|:---:|---|---|
-| `GET` | `/api/user/flashcards` | Fetches due and upcoming flashcards with SM-2 scheduling metadata | `JWT` | None | `{ flashcards: [{ id, question, easeFactor, ... }] }` |
-| `POST` | `/api/user/flashcards/review` | Submits recall quality rating and updates SM-2 interval & ease factor | `JWT` | `{ flashcardId, quality: 0-5 }` | `{ success: true, nextReview, interval }` |
-| `POST` | `/api/courses/[id]/modules/[moduleId]/quiz/attempt` | Submits quiz answers, evaluates score, records attempt & awards XP | `JWT` | `{ answers: [0, 2, 1, ...], timeTaken }` | `{ score, total, percentage, passed, xp }` |
-
-### 📜 Verification, Telemetry & Security
+### 🧠 Spaced Repetition (SM-2) & Adaptive Quizzes
 
 | Method | Endpoint | Description | Auth | Request Body / Query | Success Response |
 |---|---|---|:---:|---|---|
-| `GET` | `/api/public/certificate/[id]` | Public tamper-evident certificate verification registry lookup | `Public` | Dynamic Route `id` (e.g. `NXL-JAVA-2026`) | `{ valid: true, certificate: { recipient, grade, ... } }` |
-| `GET` | `/api/user/stats` | Fetches weekly study hour distribution, mastery points, and streaks | `JWT` | None | `{ streak, totalHours, masteryPoints, ... }` |
-| `GET` | `/api/user/achievements` | Retrieves all earned and locked milestone gamification trophies | `JWT` | None | `{ earned: [...], available: [...] }` |
-| `POST` | `/api/user/security` | Updates 2FA status, password credentials, and notification triggers | `JWT` | `{ twoFactorEnabled, currentPassword, ... }` | `{ success: true }` |
+| `GET` | `/api/user/flashcards` | Global flashcards dashboard with retention rate & SM-2 scheduling | `JWT` | None | `{ stats: { retentionRate, dueCount, ... }, courses, dueFlashcards }` |
+| `POST` | `/api/user/flashcards` | Submits recall quality rating (0-5) and recalculates SM-2 interval & ease | `JWT` | `{ flashcardId, quality: 0-5 }` | `{ success: true, review: { interval, easeFactor, dueDate } }` |
+| `GET` | `/api/courses/[id]/modules/[moduleId]/flashcards` | Fetches or auto-generates module-specific flashcards | `JWT` | Dynamic Route `id`, `moduleId` | `{ flashcards: [...] }` |
+| `GET` | `/api/courses/[id]/modules/[moduleId]/quiz` | Fetches or creates timed adaptive quiz for current module | `JWT` | Dynamic Route `id`, `moduleId` | `{ quiz: { id, questions: [...] }, lastResult }` |
+| `POST` | `/api/courses/[id]/modules/[moduleId]/quiz` | Submits quiz answers, evaluates score, records attempt & awards XP | `JWT` | `{ answers: [0, 2, 1, ...], timeTaken }` | `{ score, total, percentage, passed, xp }` |
+
+### 🌐 Community Discovery, Public Registry & Credentials
+
+| Method | Endpoint | Description | Auth | Request Body / Query | Success Response |
+|---|---|---|:---:|---|---|
+| `GET` | `/api/public/courses` | Lists public community courses with search, topic & level filters | `Public` | `?search=...&topic=...&level=...` | `{ courses: [...] }` |
+| `GET` | `/api/public/courses/[id]` | Public course preview with full curriculum breakdown | `Public` | Dynamic Route `id` | `{ course: { id, title, modules, ... } }` |
+| `POST` | `/api/public/courses/[id]` | 1-click enroll / clone public community course into dashboard | `JWT` | Dynamic Route `id` | `{ success: true, courseId }` |
+| `GET` | `/api/public/certificate/[id]` | Public tamper-evident certificate verification registry lookup | `Public` | Dynamic Route `id` (e.g. `NXL-JAVA-2026`) | `{ valid: true, certificate: { recipient, grade, masteryPercentage, ... } }` |
+| `POST` | `/api/user/certificate/email` | Sends official graduation certificate via email with PDF attachment | `JWT` | `{ certificateId }` | `{ success: true, message: "..." }` |
+
+### 📊 Academic Telemetry, Bookmarks, Notifications & Security
+
+| Method | Endpoint | Description | Auth | Request Body / Query | Success Response |
+|---|---|---|:---:|---|---|
+| `GET` | `/api/user/stats` | Fetches weekly study distribution, mastery points, and streaks | `JWT` | None | `{ streak, totalHours, masteryPoints, stats: [...] }` |
+| `POST` | `/api/user/stats/email` | Emails weekly academic progress telemetry report to the scholar | `JWT` | None | `{ success: true }` |
+| `POST` | `/api/user/study-session` | Logs live study session time (consolidates within 15-min window) | `JWT` | `{ duration: number }` | `{ success: true }` |
+| `GET` | `/api/user/activity-calendar` | Returns study activity heatmap calendar and milestone markers | `JWT` | None | `{ calendar: [...], stats: { totalActiveDays, ... } }` |
+| `GET` | `/api/user/bookmarks` | Lists all bookmarked modules saved for rapid recall | `JWT` | None | `{ bookmarks: [...] }` |
+| `POST` | `/api/user/bookmarks` | Toggles or saves a learning module bookmark | `JWT` | `{ moduleId: string }` | `{ bookmark: { id, moduleId, ... } }` |
+| `DELETE` | `/api/user/bookmarks` | Removes a module bookmark | `JWT` | `{ moduleId: string }` | `{ success: true }` |
+| `GET` | `/api/user/notifications` | Retrieves user notifications and system alerts | `JWT` | None | `{ notifications: [...] }` |
+| `PUT` | `/api/user/notifications` | Marks single or all notifications as read | `JWT` | `{ id?: string, readAll?: boolean }` | `{ success: true }` |
+| `GET` | `/api/user/achievements` | Retrieves all earned and locked milestone gamification trophies | `JWT` | None | `{ earned: [...], available: [...], totalPoints }` |
+| `POST` | `/api/user/security` | Updates 2FA status, password credentials, and active sessions | `JWT` | `{ twoFactorEnabled, currentPassword, newPassword }` | `{ success: true }` |
+| `POST` | `/api/auth/register` | Registers new user account with bcrypt encrypted password | `Public` | `{ name, email, password, learningGoal }` | `{ user: { id, email, name } }` |
+| `POST` | `/api/auth/send-otp` | Generates & dispatches 6-digit email verification OTP via Brevo | `Public` | `{ email }` | `{ success: true, message: "..." }` |
+| `POST` | `/api/auth/verify-account` | Validates OTP and sets account verification status to true | `Public` | `{ email, otp }` | `{ success: true, verified: true }` |
+| `POST` | `/api/auth/reset-password` | Resets forgotten password via validated OTP token | `Public` | `{ email, otp, newPassword }` | `{ success: true, message: "..." }` |
 
 ---
 
