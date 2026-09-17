@@ -326,7 +326,7 @@ Modern online education and traditional EdTech platforms suffer from five fatal 
 
 ```mermaid
 flowchart TD
-    subgraph ClientLayer ["🖥️ Client Layer (Next.js 16 + React 19 SPA)"]
+    subgraph ClientLayer ["🖥️ Client Layer - Next.js 16 & React 19"]
         UI["Modern UI / Responsive Glassmorphic Layout"]
         Monaco["Monaco Code Editor Sandbox"]
         ReactFlow["React Flow + ELK.js Mindmap Engine"]
@@ -337,23 +337,23 @@ flowchart TD
 
     subgraph EdgeSecurity ["🌐 Edge Gateway & Security Middleware"]
         EdgeProxy["Edge CDN & Turbopack Dev Server"]
-        NextMiddleware["Next.js Route Middleware (middleware.ts)"]
+        NextMiddleware["Next.js Route Middleware - middleware.ts"]
         RateLimiter["Upstash Redis Sliding-Window Rate Limiter"]
         SecurityHeaders["Strict CSP, CORS, HSTS, X-Frame DENY"]
     end
 
     subgraph ServerAPIs ["⚙️ Next.js 16 App Router & REST API Handlers"]
-        CourseAPI["/api/courses — Generation & Enrollment"]
-        AuthAPI["/api/auth — NextAuth JWT & Credentials"]
-        AIAPI["/api/ai — Groq/Gemini Streaming Mentorship"]
-        ReportAPI["/api/reports & /api/user/stats — Telemetry"]
-        CertAPI["/api/public/certificate — Anti-Fraud Registry"]
-        FlashcardAPI["/api/user/flashcards — SM-2 Scheduler"]
-        VideoAPI["/api/videos — YouTube Academic Integration"]
+        CourseAPI["Courses Generation & Enrollment"]
+        AuthAPI["NextAuth JWT & Credentials"]
+        AIAPI["Groq & Gemini Streaming Mentorship"]
+        ReportAPI["Reports & Telemetry"]
+        CertAPI["Anti-Fraud Registry"]
+        FlashcardAPI["SM-2 Scheduler"]
+        VideoAPI["YouTube Academic Integration"]
     end
 
     subgraph AIOrchestration ["🧠 AI Multi-Model Orchestration Engine"]
-        GroqEngine["Groq SDK (LPU Llama 3.3 70B Versatile)"]
+        GroqEngine["Groq SDK - LPU Llama 3.3 70B Versatile"]
         GeminiEngine["Google Gemini 1.5 / 2.0 Flash Fallback"]
         OpenRouterEngine["OpenRouter Multi-Model Fail-Safe"]
         ZodValidator["Zod JSON Schema Sanitizer & Repair"]
@@ -362,7 +362,7 @@ flowchart TD
     subgraph DataPersistence ["🗄️ Persistence, Storage & External Services"]
         PrismaORM["Prisma 5.14 ORM Engine"]
         NeonDB[("Neon Serverless PostgreSQL")]
-        BrevoMail["Brevo (Sendinblue) Transactional OTP Emails"]
+        BrevoMail["Brevo Sendinblue Transactional OTP Emails"]
         PDFEngine["jsPDF Academic Report & Certificate Generator"]
     end
 
@@ -370,7 +370,7 @@ flowchart TD
     RateLimiter --> ServerAPIs
     ServerAPIs --> AIOrchestration
     AIOrchestration --> GroqEngine
-    GroqEngine -.->|Fallback on Quota/Error| GeminiEngine
+    GroqEngine -.->|Fallback on Quota Error| GeminiEngine
     GeminiEngine -.->|Fail-Safe| OpenRouterEngine
     AIOrchestration --> ZodValidator --> CourseAPI
     ServerAPIs --> PrismaORM --> NeonDB
@@ -389,16 +389,16 @@ flowchart TD
     A["User Input: Topic, Level, Hours/Day, Career Goal"] --> B["Prompt Engineering & Meta-Syllabus Construction"]
     B --> C{"Primary Engine: Groq Llama 3.3 70B"}
     
-    C -->|Success (Sub-2s Latency)| D["Raw JSON Token Stream"]
-    C -->|Rate Limit / 429 / Timeout| E{"Secondary Engine: Google Gemini 1.5/2.0 Flash"}
+    C -->|Fast Sub-2s Stream| D["Raw JSON Token Stream"]
+    C -->|Rate Limit or Timeout| E{"Secondary Engine: Google Gemini 1.5 / 2.0 Flash"}
     
     E -->|Success| D
-    E -->|Error| F["Tertiary Fallback: OpenRouter Multi-Model Gateway"]
+    E -->|Error Fallback| F["Tertiary Fallback: OpenRouter Multi-Model Gateway"]
     F --> D
 
     D --> G["Structural Zod Parsing & Schema Repair"]
     G -->|Valid JSON Schema| H["Topological Module Ordering & Subtopic Linking"]
-    G -->|Malformed JSON Block| I["Algorithmic String Repair & Clean Extractor"]
+    G -->|Malformed Block| I["Algorithmic String Repair & Clean Extractor"]
     I --> H
 
     H --> J["Generate Module Content, Exercises & Mindmaps"]
@@ -420,24 +420,28 @@ To ensure that academic roadmaps are pedagogically sound, the AI engine enforces
 NexLearn dynamically constructs full visual concept graphs for every module:
 
 ```mermaid
-mindmap
-  root((Course Concept))
-    Foundational Mechanics
-      Core Principles
-      Syntax & Semantics
-      Memory Management
-    Applied Implementation
-      Design Patterns
-      Data Structures
-      Standard Library
-    Real-World Architecture
-      Concurrency & Async
-      Error Handling
-      Production Deployment
-    Edge Cases & Mastery
-      Performance Profiling
-      Common Gotchas
-      Best Practices
+graph LR
+    Root["🎯 Course Concept Knowledge Graph"]
+    
+    Root --> M1["Foundational Mechanics"]
+    M1 --> M1_1["Core Principles"]
+    M1 --> M1_2["Syntax & Semantics"]
+    M1 --> M1_3["Memory Management"]
+    
+    Root --> M2["Applied Implementation"]
+    M2 --> M2_1["Design Patterns"]
+    M2 --> M2_2["Data Structures"]
+    M2 --> M2_3["Standard Library"]
+    
+    Root --> M3["Real-World Architecture"]
+    M3 --> M3_1["Concurrency & Async"]
+    M3 --> M3_2["Error Handling"]
+    M3 --> M3_3["Production Deployment"]
+    
+    Root --> M4["Edge Cases & Mastery"]
+    M4 --> M4_1["Performance Profiling"]
+    M4 --> M4_2["Common Gotchas"]
+    M4 --> M4_3["Best Practices"]
 ```
 
 ---
@@ -453,15 +457,15 @@ stateDiagram-v2
     
     ReviewScheduled --> StudentEvaluates: Flashcard Due for Review
     
-    StudentEvaluates --> ScoreAgain: Rating = 0 (Again)
-    StudentEvaluates --> ScoreHard: Rating = 1 (Hard)
-    StudentEvaluates --> ScoreGood: Rating = 2 (Good)
-    StudentEvaluates --> ScoreEasy: Rating = 3 (Easy)
+    StudentEvaluates --> ScoreAgain: Rating = 0 Again
+    StudentEvaluates --> ScoreHard: Rating = 1 Hard
+    StudentEvaluates --> ScoreGood: Rating = 2 Good
+    StudentEvaluates --> ScoreEasy: Rating = 3 Easy
     
-    ScoreAgain --> FlashcardNew: Repetitions = 0, Interval = 1 Day, Ease Factor Decremented (-0.20)
-    ScoreHard --> ReviewScheduled: Interval = Current * 1.2, Ease Factor Decremented (-0.15)
+    ScoreAgain --> FlashcardNew: Repetitions = 0, Interval = 1 Day, Ease Decrement -0.20
+    ScoreHard --> ReviewScheduled: Interval = Current * 1.2, Ease Decrement -0.15
     ScoreGood --> ReviewScheduled: Repetitions += 1, Interval = Interval * EaseFactor
-    ScoreEasy --> ReviewScheduled: Repetitions += 1, Interval = Interval * EaseFactor * 1.3, Ease Factor Incremented (+0.15)
+    ScoreEasy --> ReviewScheduled: Repetitions += 1, Interval = Interval * EaseFactor * 1.3, Ease Increment +0.15
 ```
 
 ### Mathematical Formula
