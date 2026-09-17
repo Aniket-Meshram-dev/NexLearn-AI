@@ -4,7 +4,7 @@
 
 <br/>
 
-<a href="http://localhost:3000"><img src="https://img.shields.io/badge/🚀_LIVE_PLATFORM-nexlearn--ai.pages.dev-4F46E5?style=for-the-badge&labelColor=030712" /></a>
+<a href="https://nexlearn-ai-tan.vercel.app/"><img src="https://img.shields.io/badge/🚀_LIVE_PLATFORM-nexlearn--ai--tan.vercel.app-4F46E5?style=for-the-badge&labelColor=030712" /></a>
 <a href="https://github.com/Aniket-Meshram-dev/NexLearn-AI/stargazers"><img src="https://img.shields.io/github/stars/Aniket-Meshram-dev/NexLearn-AI?style=for-the-badge&color=F59E0B&labelColor=030712&logo=github" /></a>
 <a href="./LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-10B981?style=for-the-badge&labelColor=030712" /></a>
 <a href="https://github.com/Aniket-Meshram-dev/NexLearn-AI/issues"><img src="https://img.shields.io/badge/PRs-welcome-6366F1?style=for-the-badge&labelColor=030712" /></a>
@@ -29,9 +29,9 @@
 
 <div align="center">
 
-### 🔗 [**nexlearn-ai.pages.dev**](http://localhost:3000)
+### 🔗 [**nexlearn-ai-tan.vercel.app**](https://nexlearn-ai-tan.vercel.app/)
 
-*Deployed on Cloudflare Edge / Vercel Serverless · Neon Serverless PostgreSQL with Connection Pooling.*
+*Production Deployment on Vercel Serverless · Neon Serverless PostgreSQL with Connection Pooling.*
 
 </div>
 
@@ -873,7 +873,7 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 *Full-Stack Engineer & AI Systems Architect*
 
 [![GitHub](https://img.shields.io/badge/GitHub-Aniket--Meshram--dev-181717?style=for-the-badge&logo=github)](https://github.com/Aniket-Meshram-dev)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Aniket_Meshram-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/aniket-meshram)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-aniket--meshram--dev-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/aniket-meshram-dev)
 [![Email](https://img.shields.io/badge/Email-aniketmeshram445%40gmail.com-EA4335?style=for-the-badge&logo=gmail)](mailto:aniketmeshram445@gmail.com)
 
 </div>
